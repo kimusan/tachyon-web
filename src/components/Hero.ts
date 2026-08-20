@@ -252,7 +252,7 @@ export class HeroComponent {
                     <div class="flex items-start justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                       <div>
                         <h3 class="font-bold text-slate-900 dark:text-white text-base">Tachyon Hardening & SRI Check Passed</h3>
-                        <div class="text-xs text-slate-500 mt-0.5">From: <span class="font-mono text-slate-700 dark:text-slate-300">secops@tachyon-mail.app</span></div>
+                        <div class="text-xs text-slate-500 mt-0.5">From: <span class="font-mono text-slate-700 dark:text-slate-300">secops@tachyonmail.app</span></div>
                       </div>
                       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                         ${icons.lock('w-3 h-3')}

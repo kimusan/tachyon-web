@@ -27,7 +27,7 @@ export const PROJECT_CONFIG = {
   name: 'Tachyon Webmail',
   tagline: 'Simple, modern & fast web-based email client in PHP',
   subheading: 'Hardened, privacy-first, and zero-database webmail built for modern PHP 8.2+. Engineered to be faster than light.',
-  domain: 'tachyon-mail.app',
+  domain: 'tachyonmail.app',
   githubRepo: 'kimusan/Tachyon',
   githubUrl: 'https://github.com/kimusan/Tachyon',
   githubIssuesUrl: 'https://github.com/kimusan/Tachyon/issues',

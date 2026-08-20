@@ -62,7 +62,7 @@ export class FooterComponent {
               © 2025 - present Tachyon • © 2020 - 2024 SnappyMail • © 2013 - 2022 RainLoop
             </div>
             <div class="flex items-center gap-4">
-              <span>tachyon-mail.app</span>
+              <span>tachyonmail.app</span>
               <span>•</span>
               <a href="${PROJECT_CONFIG.githubUrl}" target="_blank" class="hover:underline">Source on GitHub</a>
             </div>

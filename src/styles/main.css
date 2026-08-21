@@ -206,11 +206,19 @@
   padding: 1.25rem;
   border-radius: 0.5rem;
   overflow-x: auto;
+  max-width: 100%;
   margin: 1.25rem 0;
   border: 1px solid #1e293b;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.875rem;
   line-height: 1.6;
+}
+
+.prose-custom img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem auto;
 }
 
 .prose-custom blockquote {
@@ -225,7 +233,10 @@
 }
 
 .prose-custom table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: 0.9375rem;

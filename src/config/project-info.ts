@@ -91,30 +91,7 @@ export const FALLBACK_RELEASE: ReleaseInfo = {
   ]
 };
 
-export const FALLBACK_PRERELEASE: ReleaseInfo = {
-  version: 'v3.2.6',
-  name: 'v3.2.6 (pre-release)',
-  publishedAt: '2026-08-21',
-  htmlUrl: 'https://github.com/kimusan/Tachyon/releases/tag/v3.2.6',
-  body: `### Changes in v3.2.6 (pre-release)\n\n- Early preview of upcoming enhancements and bug fixes\n- Test builds for experimental features\n- Please report any regressions via GitHub issue tracker`,
-  tarballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.tar.gz',
-  zipballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.zip',
-  isPrerelease: true,
-  assets: [
-    {
-      name: 'tachyon-3.2.6.tar.gz',
-      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.tar.gz',
-      size: '6.9 MB',
-      type: 'tar'
-    },
-    {
-      name: 'tachyon-3.2.6.zip',
-      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.zip',
-      size: '7.2 MB',
-      type: 'zip'
-    }
-  ]
-};
+export const FALLBACK_PRERELEASE: ReleaseInfo | null = null;
 
 export const WIKI_PAGES: WikiPageMeta[] = [
   {

@@ -51,6 +51,41 @@ export class GitHubReleasesService {
     };
   }
 
+  /**
+   * Compares semver and timestamps to check if a pre-release is strictly newer than the stable release.
+   */
+  public static isPrereleaseNewer(prerelease: ReleaseInfo, stable: ReleaseInfo): boolean {
+    const cleanPre = prerelease.version.replace(/^v/i, '').trim();
+    const cleanStable = stable.version.replace(/^v/i, '').trim();
+
+    const [preBase, preTag] = cleanPre.split('-');
+    const [stableBase, stableTag] = cleanStable.split('-');
+
+    const preParts = preBase.split('.').map(n => parseInt(n, 10) || 0);
+    const stableParts = stableBase.split('.').map(n => parseInt(n, 10) || 0);
+
+    for (let i = 0; i < Math.max(preParts.length, stableParts.length); i++) {
+      const p = preParts[i] || 0;
+      const s = stableParts[i] || 0;
+      if (p > s) return true;
+      if (p < s) return false;
+    }
+
+    // If numerical base versions (e.g. 3.2.8) are equal:
+    // If the pre-release has a pre-release tag (e.g. 3.2.8-beta) and stable doesn't (3.2.8),
+    // the stable release is considered the completed release (newer).
+    if (preTag && !stableTag) {
+      return false;
+    }
+
+    // If both have tags or publication dates differ, check timestamp
+    if (prerelease.publishedAt && stable.publishedAt) {
+      return new Date(prerelease.publishedAt).getTime() > new Date(stable.publishedAt).getTime();
+    }
+
+    return false;
+  }
+
   public static async getReleasesSummary(): Promise<ReleasesSummary> {
     // 1. Check local cache
     try {
@@ -94,7 +129,12 @@ export class GitHubReleasesService {
         .map((r: any) => this.mapReleaseJson(r));
 
       const stable = parsedReleases.find(r => !r.isPrerelease) || FALLBACK_RELEASE;
-      const prerelease = parsedReleases.find(r => r.isPrerelease) || null;
+      const candidatePrerelease = parsedReleases.find(r => r.isPrerelease) || null;
+
+      // Only show pre-release if it is strictly newer than the current stable release
+      const prerelease = (candidatePrerelease && this.isPrereleaseNewer(candidatePrerelease, stable))
+        ? candidatePrerelease
+        : null;
 
       const summary: ReleasesSummary = {
         stable,

@@ -1,7 +1,7 @@
 import './styles/main.css';
 import './services/theme';
 import { GitHubReleasesService } from './services/github-releases';
-import { FALLBACK_RELEASE, ReleaseInfo } from './config/project-info';
+import { FALLBACK_RELEASE, FALLBACK_PRERELEASE, ReleaseInfo } from './config/project-info';
 
 import { NavbarComponent } from './components/Navbar';
 import { HeroComponent } from './components/Hero';
@@ -15,7 +15,8 @@ import { IssueTrackerCTAComponent } from './components/IssueTrackerCTA';
 import { FooterComponent } from './components/Footer';
 
 class App {
-  private currentRelease: ReleaseInfo = FALLBACK_RELEASE;
+  private currentStableRelease: ReleaseInfo = FALLBACK_RELEASE;
+  private currentPreRelease: ReleaseInfo | null = FALLBACK_PRERELEASE;
   private navbar: NavbarComponent;
   private hero: HeroComponent;
   private features: FeaturesComponent;
@@ -28,9 +29,13 @@ class App {
   private footer: FooterComponent;
 
   constructor() {
-    this.releaseModal = new ReleaseModalComponent(this.currentRelease);
-    this.navbar = new NavbarComponent(() => this.releaseModal.open());
-    this.hero = new HeroComponent(this.currentRelease, () => this.releaseModal.open());
+    this.releaseModal = new ReleaseModalComponent(this.currentStableRelease, this.currentPreRelease);
+    this.navbar = new NavbarComponent((rel) => this.releaseModal.open(rel));
+    this.hero = new HeroComponent(
+      this.currentStableRelease, 
+      this.currentPreRelease, 
+      (rel) => this.releaseModal.open(rel)
+    );
     this.features = new FeaturesComponent();
     this.history = new LineageHistoryComponent();
     this.installTabs = new InstallTabsComponent();
@@ -43,7 +48,7 @@ class App {
   public async init() {
     this.render();
     this.bindRouting();
-    this.fetchLatestRelease();
+    this.fetchReleases();
   }
 
   private render() {
@@ -140,15 +145,17 @@ class App {
     });
   }
 
-  private async fetchLatestRelease() {
+  private async fetchReleases() {
     try {
-      const release = await GitHubReleasesService.getLatestRelease();
-      this.currentRelease = release;
-      this.navbar.setVersion(release.version);
-      this.hero.updateRelease(release);
-      this.releaseModal.setRelease(release);
+      const summary = await GitHubReleasesService.getReleasesSummary();
+      this.currentStableRelease = summary.stable;
+      this.currentPreRelease = summary.prerelease;
+
+      this.navbar.setReleases(summary.stable, summary.prerelease);
+      this.hero.updateReleases(summary.stable, summary.prerelease);
+      this.releaseModal.setReleases(summary.stable, summary.prerelease);
     } catch (err) {
-      console.warn('Could not fetch live GitHub release, using fallback.', err);
+      console.warn('Could not fetch live GitHub releases, using fallback.', err);
     }
   }
 }

@@ -1,11 +1,11 @@
-import { FALLBACK_RELEASE, ReleaseInfo, ReleaseAsset, PROJECT_CONFIG } from '../config/project-info';
+import { FALLBACK_RELEASE, FALLBACK_PRERELEASE, ReleaseInfo, ReleaseAsset, ReleasesSummary, PROJECT_CONFIG } from '../config/project-info';
 
-const CACHE_KEY = 'tachyon_latest_release';
+const CACHE_KEY = 'tachyon_releases_summary';
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
-interface CachedReleaseData {
+interface CachedReleasesData {
   timestamp: number;
-  data: ReleaseInfo;
+  data: ReleasesSummary;
 }
 
 export class GitHubReleasesService {
@@ -27,13 +27,37 @@ export class GitHubReleasesService {
     return 'other';
   }
 
-  public static async getLatestRelease(): Promise<ReleaseInfo> {
+  private static mapReleaseJson(json: any): ReleaseInfo {
+    const assets: ReleaseAsset[] = (json.assets || []).map((a: any) => ({
+      name: a.name,
+      downloadUrl: a.browser_download_url,
+      size: this.formatBytes(a.size),
+      type: this.parseAssetType(a.name)
+    }));
+
+    const tarAsset = assets.find(a => a.name.match(/^tachyon-[\d.]+(-nextcloud|-owncloud)?\.(tar\.gz|tgz)$/i) || a.name.endsWith('.tar.gz'));
+    const zipAsset = assets.find(a => a.name.match(/^tachyon-[\d.]+\.zip$/i) || a.name.endsWith('.zip'));
+
+    return {
+      version: json.tag_name || json.name || 'v3.2.8',
+      name: json.name || json.tag_name || 'Tachyon Release',
+      publishedAt: json.published_at ? json.published_at.split('T')[0] : '',
+      htmlUrl: json.html_url || PROJECT_CONFIG.githubUrl,
+      body: json.body || '',
+      assets,
+      tarballUrl: tarAsset ? tarAsset.downloadUrl : (json.tarball_url || ''),
+      zipballUrl: zipAsset ? zipAsset.downloadUrl : (json.zipball_url || ''),
+      isPrerelease: Boolean(json.prerelease)
+    };
+  }
+
+  public static async getReleasesSummary(): Promise<ReleasesSummary> {
     // 1. Check local cache
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
-        const parsed: CachedReleaseData = JSON.parse(cached);
-        if (Date.now() - parsed.timestamp < CACHE_TTL_MS) {
+        const parsed: CachedReleasesData = JSON.parse(cached);
+        if (Date.now() - parsed.timestamp < CACHE_TTL_MS && parsed.data.stable) {
           return parsed.data;
         }
       }
@@ -41,9 +65,9 @@ export class GitHubReleasesService {
       // Ignore localStorage errors
     }
 
-    // 2. Fetch live from GitHub API
+    // 2. Fetch live from GitHub API (releases list gives both stable & pre-releases)
     try {
-      const response = await fetch(`https://api.github.com/repos/${PROJECT_CONFIG.githubRepo}/releases/latest`, {
+      const response = await fetch(`https://api.github.com/repos/${PROJECT_CONFIG.githubRepo}/releases?per_page=20`, {
         headers: {
           'Accept': 'application/vnd.github.v3+json'
         }
@@ -51,82 +75,54 @@ export class GitHubReleasesService {
 
       if (!response.ok) {
         console.warn(`GitHub API returned status ${response.status}. Using fallback release data.`);
-        return FALLBACK_RELEASE;
+        return {
+          stable: FALLBACK_RELEASE,
+          prerelease: FALLBACK_PRERELEASE
+        };
       }
 
-      const json = await response.json();
-      
-      const assets: ReleaseAsset[] = (json.assets || []).map((a: any) => ({
-        name: a.name,
-        downloadUrl: a.browser_download_url,
-        size: this.formatBytes(a.size),
-        type: this.parseAssetType(a.name)
-      }));
+      const releasesJson = await response.json();
+      if (!Array.isArray(releasesJson) || releasesJson.length === 0) {
+        return {
+          stable: FALLBACK_RELEASE,
+          prerelease: FALLBACK_PRERELEASE
+        };
+      }
 
-      // Find primary tarball and zipball
-      const tarAsset = assets.find(a => a.name.match(/^tachyon-[\d.]+\.tar\.gz$/i));
-      const zipAsset = assets.find(a => a.name.match(/^tachyon-[\d.]+\.zip$/i));
+      const parsedReleases = releasesJson
+        .filter((r: any) => !r.draft)
+        .map((r: any) => this.mapReleaseJson(r));
 
-      const releaseInfo: ReleaseInfo = {
-        version: json.tag_name || json.name || FALLBACK_RELEASE.version,
-        name: json.name || json.tag_name || FALLBACK_RELEASE.name,
-        publishedAt: json.published_at ? json.published_at.split('T')[0] : FALLBACK_RELEASE.publishedAt,
-        htmlUrl: json.html_url || FALLBACK_RELEASE.htmlUrl,
-        body: json.body || FALLBACK_RELEASE.body,
-        assets,
-        tarballUrl: tarAsset ? tarAsset.downloadUrl : (json.tarball_url || FALLBACK_RELEASE.tarballUrl),
-        zipballUrl: zipAsset ? zipAsset.downloadUrl : (json.zipball_url || FALLBACK_RELEASE.zipballUrl)
+      const stable = parsedReleases.find(r => !r.isPrerelease) || FALLBACK_RELEASE;
+      const prerelease = parsedReleases.find(r => r.isPrerelease) || null;
+
+      const summary: ReleasesSummary = {
+        stable,
+        prerelease
       };
 
       // Save to cache
       try {
         localStorage.setItem(CACHE_KEY, JSON.stringify({
           timestamp: Date.now(),
-          data: releaseInfo
+          data: summary
         }));
       } catch {
-        // Ignore localStorage write error
+        // Ignore localStorage error
       }
 
-      return releaseInfo;
+      return summary;
     } catch (error) {
-      console.warn('Failed to fetch latest GitHub release. Falling back to static data.', error);
-      return FALLBACK_RELEASE;
+      console.warn('Failed to fetch GitHub releases. Falling back to static data.', error);
+      return {
+        stable: FALLBACK_RELEASE,
+        prerelease: FALLBACK_PRERELEASE
+      };
     }
   }
 
-  public static async getAllReleases(limit = 5): Promise<ReleaseInfo[]> {
-    try {
-      const response = await fetch(`https://api.github.com/repos/${PROJECT_CONFIG.githubRepo}/releases?per_page=${limit}`, {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
-
-      if (!response.ok) {
-        return [FALLBACK_RELEASE];
-      }
-
-      const releases = await response.json();
-      if (!Array.isArray(releases)) return [FALLBACK_RELEASE];
-
-      return releases.map((json: any) => ({
-        version: json.tag_name || json.name,
-        name: json.name || json.tag_name,
-        publishedAt: json.published_at ? json.published_at.split('T')[0] : '',
-        htmlUrl: json.html_url,
-        body: json.body || '',
-        assets: (json.assets || []).map((a: any) => ({
-          name: a.name,
-          downloadUrl: a.browser_download_url,
-          size: this.formatBytes(a.size),
-          type: this.parseAssetType(a.name)
-        })),
-        tarballUrl: json.tarball_url || '',
-        zipballUrl: json.zipball_url || ''
-      }));
-    } catch {
-      return [FALLBACK_RELEASE];
-    }
+  public static async getLatestRelease(): Promise<ReleaseInfo> {
+    const summary = await this.getReleasesSummary();
+    return summary.stable;
   }
 }

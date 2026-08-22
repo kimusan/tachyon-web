@@ -1,25 +1,56 @@
 import { icons } from '../assets/icons';
 import { themeService } from '../services/theme';
-import { PROJECT_CONFIG } from '../config/project-info';
+import { PROJECT_CONFIG, ReleaseInfo, FALLBACK_RELEASE, FALLBACK_PRERELEASE } from '../config/project-info';
 
 export class NavbarComponent {
-  private latestVersion: string = 'v3.2.5';
-  private onOpenReleaseModal: () => void;
+  private stableRelease: ReleaseInfo = FALLBACK_RELEASE;
+  private prerelease: ReleaseInfo | null = FALLBACK_PRERELEASE;
+  private onOpenReleaseModal: (release?: ReleaseInfo) => void;
 
-  constructor(onOpenReleaseModal: () => void) {
+  constructor(onOpenReleaseModal: (release?: ReleaseInfo) => void) {
     this.onOpenReleaseModal = onOpenReleaseModal;
   }
 
-  public setVersion(version: string) {
-    this.latestVersion = version;
+  public setReleases(stable: ReleaseInfo, prerelease: ReleaseInfo | null) {
+    this.stableRelease = stable;
+    this.prerelease = prerelease;
+
+    // Desktop Stable badge
     const badge = document.getElementById('nav-version-badge');
-    if (badge) {
-      badge.textContent = this.latestVersion;
+    if (badge) badge.textContent = this.stableRelease.version;
+
+    // Desktop Pre-release container & badge
+    const preContainer = document.getElementById('nav-prerelease-container');
+    const preBadge = document.getElementById('nav-prerelease-badge');
+    if (preContainer) {
+      if (this.prerelease) {
+        preContainer.classList.remove('hidden');
+        if (preBadge) preBadge.textContent = this.prerelease.version;
+      } else {
+        preContainer.classList.add('hidden');
+      }
     }
+
+    // Mobile badges
     const mobileBadge = document.getElementById('nav-version-badge-mobile');
-    if (mobileBadge) {
-      mobileBadge.textContent = this.latestVersion;
+    if (mobileBadge) mobileBadge.textContent = this.stableRelease.version;
+
+    const mobilePreRow = document.getElementById('mobile-prerelease-row');
+    const mobilePreBadge = document.getElementById('nav-prerelease-badge-mobile');
+    if (mobilePreRow) {
+      if (this.prerelease) {
+        mobilePreRow.classList.remove('hidden');
+        if (mobilePreBadge) mobilePreBadge.textContent = this.prerelease.version;
+      } else {
+        mobilePreRow.classList.add('hidden');
+      }
     }
+  }
+
+  public setVersion(version: string) {
+    this.stableRelease.version = version;
+    const badge = document.getElementById('nav-version-badge');
+    if (badge) badge.textContent = version;
   }
 
   public render(): string {
@@ -37,15 +68,31 @@ export class NavbarComponent {
                 <span>Tachyon</span>
               </a>
 
-              <!-- Version Pill Button -->
-              <button 
-                id="nav-release-btn"
-                class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900 transition-colors"
-                title="View Release Notes"
-              >
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span id="nav-version-badge">${this.latestVersion}</span>
-              </button>
+              <!-- Version Badges (Stable & Pre-release) -->
+              <div class="hidden sm:flex items-center gap-2">
+                <!-- Stable Release Pill -->
+                <button 
+                  id="nav-release-btn"
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900 transition-colors"
+                  title="View Stable Release Notes"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span id="nav-version-badge">${this.stableRelease.version}</span>
+                </button>
+
+                <!-- Pre-Release Pill -->
+                <div id="nav-prerelease-container" class="${this.prerelease ? '' : 'hidden'}">
+                  <button 
+                    id="nav-prerelease-btn"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/80 hover:bg-amber-100 dark:hover:bg-amber-900 transition-colors"
+                    title="View Latest Pre-Release Notes"
+                  >
+                    ${icons.flask('w-3 h-3 text-amber-500')}
+                    <span id="nav-prerelease-badge">${this.prerelease ? this.prerelease.version : ''}</span>
+                    <span class="text-[10px] uppercase font-bold tracking-wider px-1 py-0.2 rounded bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200">Pre</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
             <!-- Desktop Nav Links -->
@@ -101,15 +148,27 @@ export class NavbarComponent {
         <!-- Mobile Menu Drawer -->
         <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 px-4 pt-2 pb-6 space-y-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg">
           <div class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Latest Release</span>
+            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Latest Stable</span>
             <button 
               id="mobile-nav-release-btn"
               class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300 border border-brand-200 dark:border-brand-800"
             >
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span id="nav-version-badge-mobile">${this.latestVersion}</span>
+              <span id="nav-version-badge-mobile">${this.stableRelease.version}</span>
             </button>
           </div>
+
+          <div id="mobile-prerelease-row" class="${this.prerelease ? '' : 'hidden'} flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Latest Pre-Release</span>
+            <button 
+              id="mobile-nav-prerelease-btn"
+              class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
+            >
+              ${icons.flask('w-3 h-3 text-amber-500')}
+              <span id="nav-prerelease-badge-mobile">${this.prerelease ? this.prerelease.version : ''}</span>
+            </button>
+          </div>
+
           <a href="#features" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Features</a>
           <a href="#history" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Lineage & History</a>
           <a href="#install" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Install Guide</a>
@@ -145,14 +204,33 @@ export class NavbarComponent {
     const releaseBtn = document.getElementById('nav-release-btn');
     if (releaseBtn) {
       releaseBtn.addEventListener('click', () => {
-        this.onOpenReleaseModal();
+        this.onOpenReleaseModal(this.stableRelease);
+      });
+    }
+
+    const prereleaseBtn = document.getElementById('nav-prerelease-btn');
+    if (prereleaseBtn) {
+      prereleaseBtn.addEventListener('click', () => {
+        if (this.prerelease) {
+          this.onOpenReleaseModal(this.prerelease);
+        }
       });
     }
 
     const mobileReleaseBtn = document.getElementById('mobile-nav-release-btn');
     if (mobileReleaseBtn) {
       mobileReleaseBtn.addEventListener('click', () => {
-        this.onOpenReleaseModal();
+        this.onOpenReleaseModal(this.stableRelease);
+        this.closeMobileMenu();
+      });
+    }
+
+    const mobilePreReleaseBtn = document.getElementById('mobile-nav-prerelease-btn');
+    if (mobilePreReleaseBtn) {
+      mobilePreReleaseBtn.addEventListener('click', () => {
+        if (this.prerelease) {
+          this.onOpenReleaseModal(this.prerelease);
+        }
         this.closeMobileMenu();
       });
     }

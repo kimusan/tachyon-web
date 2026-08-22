@@ -1,24 +1,51 @@
 import { icons } from '../assets/icons';
-import { ReleaseInfo, ReleaseAsset } from '../config/project-info';
+import { ReleaseInfo, ReleaseAsset, FALLBACK_RELEASE, FALLBACK_PRERELEASE } from '../config/project-info';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
 export class ReleaseModalComponent {
-  private release: ReleaseInfo;
+  private stableRelease: ReleaseInfo = FALLBACK_RELEASE;
+  private prerelease: ReleaseInfo | null = FALLBACK_PRERELEASE;
+  private activeTab: 'stable' | 'prerelease' = 'stable';
   private isOpen: boolean = false;
 
-  constructor(release: ReleaseInfo) {
-    this.release = release;
+  constructor(stable: ReleaseInfo, prerelease: ReleaseInfo | null = null) {
+    this.stableRelease = stable;
+    this.prerelease = prerelease;
   }
 
-  public setRelease(release: ReleaseInfo) {
-    this.release = release;
+  public setReleases(stable: ReleaseInfo, prerelease: ReleaseInfo | null) {
+    this.stableRelease = stable;
+    this.prerelease = prerelease;
     if (this.isOpen) {
       this.renderContent();
     }
   }
 
-  public open() {
+  public setRelease(release: ReleaseInfo) {
+    if (release.isPrerelease) {
+      this.prerelease = release;
+      this.activeTab = 'prerelease';
+    } else {
+      this.stableRelease = release;
+      this.activeTab = 'stable';
+    }
+    if (this.isOpen) {
+      this.renderContent();
+    }
+  }
+
+  public open(targetRelease?: ReleaseInfo) {
+    if (targetRelease) {
+      if (targetRelease.isPrerelease) {
+        this.prerelease = targetRelease;
+        this.activeTab = 'prerelease';
+      } else {
+        this.stableRelease = targetRelease;
+        this.activeTab = 'stable';
+      }
+    }
+
     this.isOpen = true;
     const modalEl = document.getElementById('release-modal-overlay');
     if (modalEl) {
@@ -55,34 +82,84 @@ export class ReleaseModalComponent {
     `;
   }
 
+  private getCurrentRelease(): ReleaseInfo {
+    if (this.activeTab === 'prerelease' && this.prerelease) {
+      return this.prerelease;
+    }
+    return this.stableRelease;
+  }
+
   private getModalInnerHtml(): string {
-    const rawBody = this.release.body || 'No release notes provided.';
+    const current = this.getCurrentRelease();
+    const rawBody = current.body || 'No release notes provided.';
     const parsedBody = DOMPurify.sanitize(marked.parse(rawBody) as string);
+    const isPre = current.isPrerelease;
 
     return `
       <!-- Modal Header -->
-      <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60">
-        <div class="space-y-1">
-          <div class="flex items-center gap-2">
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-brand-500 text-white">
-              ${this.release.version}
+      <div class="p-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 space-y-4">
+        
+        <div class="flex items-center justify-between">
+          
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${
+              isPre ? 'bg-amber-500 text-white' : 'bg-brand-500 text-white'
+            }">
+              ${current.version}
             </span>
-            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
-              ${this.release.name}
-            </h3>
+
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${
+              isPre 
+                ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-800' 
+                : 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-800'
+            }">
+              ${isPre ? icons.flask('w-3 h-3') : icons.badgeCheck('w-3 h-3')}
+              <span>${isPre ? 'Pre-Release' : 'Latest Stable'}</span>
+            </span>
+
+            <span class="text-xs text-slate-500 dark:text-slate-400">
+              Published on ${current.publishedAt || 'GitHub'}
+            </span>
           </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Published on ${this.release.publishedAt || 'GitHub'}
-          </p>
+
+          <button 
+            id="release-modal-close-btn"
+            class="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+            aria-label="Close modal"
+          >
+            ${icons.close('w-5 h-5')}
+          </button>
         </div>
 
-        <button 
-          id="release-modal-close-btn"
-          class="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
-          aria-label="Close modal"
-        >
-          ${icons.close('w-5 h-5')}
-        </button>
+        <!-- Release Switcher Tabs (If pre-release is available) -->
+        ${this.prerelease ? `
+          <div class="flex items-center gap-2 p-1 rounded-xl bg-slate-200/80 dark:bg-slate-800/80 max-w-sm">
+            <button 
+              id="modal-tab-stable"
+              class="flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                this.activeTab === 'stable' 
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>Stable (${this.stableRelease.version})</span>
+            </button>
+
+            <button 
+              id="modal-tab-prerelease"
+              class="flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                this.activeTab === 'prerelease' 
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }"
+            >
+              ${icons.flask('w-3 h-3 text-amber-500')}
+              <span>Pre-release (${this.prerelease.version})</span>
+            </button>
+          </div>
+        ` : ''}
+
       </div>
 
       <!-- Modal Body -->
@@ -101,11 +178,11 @@ export class ReleaseModalComponent {
         <!-- Download Packages & Assets -->
         <div class="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
           <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            Download Assets
+            Download Assets (${current.assets.length})
           </h4>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            ${this.release.assets.map(asset => `
+            ${current.assets.map(asset => `
               <a 
                 href="${asset.downloadUrl}"
                 target="_blank"
@@ -131,12 +208,12 @@ export class ReleaseModalComponent {
       <!-- Modal Footer -->
       <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex items-center justify-between">
         <a 
-          href="${this.release.htmlUrl}"
+          href="${current.htmlUrl}"
           target="_blank"
           rel="noopener noreferrer"
           class="text-xs font-semibold text-brand-600 dark:text-cyan-400 hover:underline flex items-center gap-1"
         >
-          <span>View on GitHub Releases</span>
+          <span>View ${current.version} on GitHub</span>
           ${icons.externalLink('w-3.5 h-3.5')}
         </a>
 
@@ -180,6 +257,22 @@ export class ReleaseModalComponent {
 
     if (closeBtn) closeBtn.addEventListener('click', () => this.close());
     if (doneBtn) doneBtn.addEventListener('click', () => this.close());
+
+    const stableTab = document.getElementById('modal-tab-stable');
+    if (stableTab) {
+      stableTab.addEventListener('click', () => {
+        this.activeTab = 'stable';
+        this.renderContent();
+      });
+    }
+
+    const preTab = document.getElementById('modal-tab-prerelease');
+    if (preTab) {
+      preTab.addEventListener('click', () => {
+        this.activeTab = 'prerelease';
+        this.renderContent();
+      });
+    }
 
     if (overlay) {
       overlay.addEventListener('click', (e) => {

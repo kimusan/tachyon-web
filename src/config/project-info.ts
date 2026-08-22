@@ -21,6 +21,12 @@ export interface ReleaseInfo {
   assets: ReleaseAsset[];
   tarballUrl: string;
   zipballUrl: string;
+  isPrerelease?: boolean;
+}
+
+export interface ReleasesSummary {
+  stable: ReleaseInfo;
+  prerelease: ReleaseInfo | null;
 }
 
 export const PROJECT_CONFIG = {
@@ -43,43 +49,69 @@ export const PROJECT_CONFIG = {
 };
 
 export const FALLBACK_RELEASE: ReleaseInfo = {
-  version: 'v3.2.5',
-  name: 'Tachyon v3.2.5',
-  publishedAt: '2026-08-20',
-  htmlUrl: 'https://github.com/kimusan/Tachyon/releases/tag/v3.2.5',
-  body: `### Changes in v3.2.5\n\n- Modernized PHP 8.2+ architecture with typed properties and enums\n- Strict Content-Security-Policy with Reporting-Endpoints header\n- Permissions-Policy header denying sensitive hardware APIs\n- Subresource Integrity (SRI) hashes for all static assets\n- Configurable Undo Send delay (Off / 5 / 10 / 20 / 30s)\n- Multi-account unread count badge\n- Updated OpenPGP.js to v5.11.3\n- Drop-in upgrade compatibility for existing SnappyMail installations`,
-  tarballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.5/tachyon-3.2.5.tar.gz',
-  zipballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.5/tachyon-3.2.5.zip',
+  version: 'v3.2.8',
+  name: 'Tachyon v3.2.8',
+  publishedAt: '2026-08-22',
+  htmlUrl: 'https://github.com/kimusan/Tachyon/releases/tag/v3.2.8',
+  body: `### Changes in v3.2.8\n\n- Modernized PHP 8.2+ architecture with typed properties and enums\n- Strict Content-Security-Policy with Reporting-Endpoints header\n- Permissions-Policy header denying sensitive hardware APIs\n- Subresource Integrity (SRI) hashes for all static assets\n- Configurable Undo Send delay (Off / 5 / 10 / 20 / 30s)\n- Multi-account unread count badge\n- Updated OpenPGP.js to v5.11.3\n- Drop-in upgrade compatibility for existing SnappyMail installations`,
+  tarballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8.tar.gz',
+  zipballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8.zip',
+  isPrerelease: false,
   assets: [
     {
-      name: 'tachyon-3.2.5.tar.gz',
-      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.5/tachyon-3.2.5.tar.gz',
+      name: 'tachyon-3.2.8.tar.gz',
+      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8.tar.gz',
       size: '6.9 MB',
       type: 'tar'
     },
     {
-      name: 'tachyon-3.2.5.zip',
-      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.5/tachyon-3.2.5.zip',
+      name: 'tachyon-3.2.8.zip',
+      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8.zip',
       size: '7.2 MB',
       type: 'zip'
     },
     {
-      name: 'tachyon_3.2.5-1_all.deb',
-      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.5/tachyon_3.2.5-1_all.deb',
+      name: 'tachyon_3.2.8-1_all.deb',
+      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon_3.2.8-1_all.deb',
       size: '5.9 MB',
       type: 'deb'
     },
     {
-      name: 'tachyon-3.2.5-nextcloud.tar.gz',
-      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.5/tachyon-3.2.5-nextcloud.tar.gz',
+      name: 'tachyon-3.2.8-nextcloud.tar.gz',
+      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8-nextcloud.tar.gz',
       size: '7.0 MB',
       type: 'nextcloud'
     },
     {
-      name: 'tachyon-3.2.5-owncloud.tar.gz',
-      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.5/tachyon-3.2.5-owncloud.tar.gz',
+      name: 'tachyon-3.2.8-owncloud.tar.gz',
+      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8-owncloud.tar.gz',
       size: '6.9 MB',
       type: 'owncloud'
+    }
+  ]
+};
+
+export const FALLBACK_PRERELEASE: ReleaseInfo = {
+  version: 'v3.2.6',
+  name: 'v3.2.6 (pre-release)',
+  publishedAt: '2026-08-21',
+  htmlUrl: 'https://github.com/kimusan/Tachyon/releases/tag/v3.2.6',
+  body: `### Changes in v3.2.6 (pre-release)\n\n- Early preview of upcoming enhancements and bug fixes\n- Test builds for experimental features\n- Please report any regressions via GitHub issue tracker`,
+  tarballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.tar.gz',
+  zipballUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.zip',
+  isPrerelease: true,
+  assets: [
+    {
+      name: 'tachyon-3.2.6.tar.gz',
+      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.tar.gz',
+      size: '6.9 MB',
+      type: 'tar'
+    },
+    {
+      name: 'tachyon-3.2.6.zip',
+      downloadUrl: 'https://github.com/kimusan/Tachyon/releases/download/v3.2.6/tachyon-3.2.6.zip',
+      size: '7.2 MB',
+      type: 'zip'
     }
   ]
 };

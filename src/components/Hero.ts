@@ -1,24 +1,60 @@
 import { icons } from '../assets/icons';
-import { ReleaseInfo, PROJECT_CONFIG } from '../config/project-info';
+import { ReleaseInfo, PROJECT_CONFIG, FALLBACK_RELEASE, FALLBACK_PRERELEASE } from '../config/project-info';
 
 export class HeroComponent {
-  private release: ReleaseInfo;
-  private onOpenReleaseModal: () => void;
+  private stableRelease: ReleaseInfo = FALLBACK_RELEASE;
+  private prerelease: ReleaseInfo | null = FALLBACK_PRERELEASE;
+  private onOpenReleaseModal: (release?: ReleaseInfo) => void;
 
-  constructor(release: ReleaseInfo, onOpenReleaseModal: () => void) {
-    this.release = release;
+  constructor(
+    stableRelease: ReleaseInfo, 
+    prerelease: ReleaseInfo | null, 
+    onOpenReleaseModal: (release?: ReleaseInfo) => void
+  ) {
+    this.stableRelease = stableRelease;
+    this.prerelease = prerelease;
     this.onOpenReleaseModal = onOpenReleaseModal;
   }
 
-  public updateRelease(release: ReleaseInfo) {
-    this.release = release;
+  public updateReleases(stable: ReleaseInfo, prerelease: ReleaseInfo | null) {
+    this.stableRelease = stable;
+    this.prerelease = prerelease;
+
+    // Update stable text & download href
     const versionEl = document.getElementById('hero-version-text');
-    if (versionEl) versionEl.textContent = release.version;
-    const dateEl = document.getElementById('hero-release-date');
-    if (dateEl) dateEl.textContent = release.publishedAt ? `Released ${release.publishedAt}` : '';
+    if (versionEl) versionEl.textContent = stable.version;
+
     const dlBtn = document.getElementById('hero-main-download-btn') as HTMLAnchorElement;
-    if (dlBtn && release.tarballUrl) {
-      dlBtn.href = release.tarballUrl;
+    if (dlBtn && stable.tarballUrl) {
+      dlBtn.href = stable.tarballUrl;
+    }
+    const dlBtnText = document.getElementById('hero-main-download-text');
+    if (dlBtnText) {
+      dlBtnText.textContent = `Download ${stable.version}`;
+    }
+
+    // Update pre-release text & container
+    const preContainer = document.getElementById('hero-prerelease-banner');
+    const preVersionEl = document.getElementById('hero-prerelease-version-text');
+    const preCtaBtn = document.getElementById('hero-prerelease-cta-btn');
+
+    if (preContainer) {
+      if (this.prerelease) {
+        preContainer.classList.remove('hidden');
+        if (preVersionEl) preVersionEl.textContent = this.prerelease.version;
+      } else {
+        preContainer.classList.add('hidden');
+      }
+    }
+
+    if (preCtaBtn) {
+      if (this.prerelease) {
+        preCtaBtn.classList.remove('hidden');
+        const preCtaText = document.getElementById('hero-prerelease-cta-text');
+        if (preCtaText) preCtaText.textContent = `Pre-release: ${this.prerelease.version}`;
+      } else {
+        preCtaBtn.classList.add('hidden');
+      }
     }
   }
 
@@ -29,22 +65,42 @@ export class HeroComponent {
           
           <div class="text-center max-w-3xl mx-auto space-y-6">
             
-            <!-- Dynamic Release Banner / Pill -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs sm:text-sm font-medium shadow-sm">
-              <span class="flex h-2 w-2 relative">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span class="text-slate-600 dark:text-slate-300">Latest version:</span>
-              <strong id="hero-version-text" class="text-slate-900 dark:text-white font-mono font-semibold">${this.release.version}</strong>
-              <span class="text-slate-300 dark:text-slate-600">|</span>
-              <button 
-                id="hero-changelog-btn" 
-                class="text-brand-600 dark:text-cyan-400 hover:underline flex items-center gap-1 font-semibold"
-              >
-                <span>Changelog</span>
-                ${icons.chevronRight('w-3.5 h-3.5')}
-              </button>
+            <!-- Dynamic Release Badges (Stable + Pre-release) -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5">
+              
+              <!-- Stable Version Pill -->
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs sm:text-sm font-medium shadow-sm">
+                <span class="flex h-2 w-2 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="text-slate-600 dark:text-slate-300">Latest stable:</span>
+                <strong id="hero-version-text" class="text-slate-900 dark:text-white font-mono font-semibold">${this.stableRelease.version}</strong>
+                <span class="text-slate-300 dark:text-slate-600">|</span>
+                <button 
+                  id="hero-changelog-btn" 
+                  class="text-brand-600 dark:text-cyan-400 hover:underline flex items-center gap-1 font-semibold"
+                >
+                  <span>Changelog</span>
+                  ${icons.chevronRight('w-3.5 h-3.5')}
+                </button>
+              </div>
+
+              <!-- Pre-Release Pill (Shown when pre-release exists) -->
+              <div id="hero-prerelease-banner" class="${this.prerelease ? '' : 'hidden'} inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200/80 dark:border-amber-800/80 text-xs sm:text-sm font-medium shadow-sm">
+                ${icons.flask('w-3.5 h-3.5 text-amber-500')}
+                <span class="text-amber-800 dark:text-amber-300 font-medium">Pre-release:</span>
+                <strong id="hero-prerelease-version-text" class="text-amber-900 dark:text-amber-100 font-mono font-semibold">${this.prerelease ? this.prerelease.version : ''}</strong>
+                <span class="text-amber-300 dark:text-amber-800">|</span>
+                <button 
+                  id="hero-prerelease-changelog-btn" 
+                  class="text-amber-700 dark:text-amber-300 hover:underline flex items-center gap-1 font-semibold"
+                >
+                  <span>Preview</span>
+                  ${icons.chevronRight('w-3.5 h-3.5')}
+                </button>
+              </div>
+
             </div>
 
             <!-- Main Headline -->
@@ -60,15 +116,24 @@ export class HeroComponent {
             <!-- Call to Actions -->
             <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
               
-              <!-- Primary Download Button -->
+              <!-- Primary Download Button (Stable) -->
               <a 
                 id="hero-main-download-btn"
-                href="${this.release.tarballUrl || '#'}"
+                href="${this.stableRelease.tarballUrl || '#'}"
                 class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 transition-all text-base"
               >
                 ${icons.download('w-5 h-5')}
-                <span>Download ${this.release.version}</span>
+                <span id="hero-main-download-text">Download ${this.stableRelease.version}</span>
               </a>
+
+              <!-- Pre-Release CTA Button (if pre-release available) -->
+              <button 
+                id="hero-prerelease-cta-btn"
+                class="${this.prerelease ? '' : 'hidden'} inline-flex items-center gap-2 px-4 py-3.5 rounded-xl font-semibold text-amber-900 dark:text-amber-100 bg-amber-50 dark:bg-amber-950/80 hover:bg-amber-100 dark:hover:bg-amber-900 border border-amber-200 dark:border-amber-800 hover:-translate-y-0.5 transition-all text-base"
+              >
+                ${icons.flask('w-4 h-4 text-amber-500')}
+                <span id="hero-prerelease-cta-text">Pre-release: ${this.prerelease ? this.prerelease.version : ''}</span>
+              </button>
 
               <!-- Explore Docs Button -->
               <a 
@@ -242,7 +307,7 @@ export class HeroComponent {
                       <span class="font-semibold text-slate-800 dark:text-slate-200">Nextcloud Hub</span>
                       <span class="text-slate-400 text-[11px]">Yesterday</span>
                     </div>
-                    <div class="text-xs text-slate-700 dark:text-slate-300 truncate">Tachyon App v3.2.5 successfully synchronized</div>
+                    <div class="text-xs text-slate-700 dark:text-slate-300 truncate">Tachyon App v3.2.8 successfully synchronized</div>
                   </div>
                 </div>
 
@@ -297,7 +362,25 @@ export class HeroComponent {
     const changelogBtn = document.getElementById('hero-changelog-btn');
     if (changelogBtn) {
       changelogBtn.addEventListener('click', () => {
-        this.onOpenReleaseModal();
+        this.onOpenReleaseModal(this.stableRelease);
+      });
+    }
+
+    const preChangelogBtn = document.getElementById('hero-prerelease-changelog-btn');
+    if (preChangelogBtn) {
+      preChangelogBtn.addEventListener('click', () => {
+        if (this.prerelease) {
+          this.onOpenReleaseModal(this.prerelease);
+        }
+      });
+    }
+
+    const preCtaBtn = document.getElementById('hero-prerelease-cta-btn');
+    if (preCtaBtn) {
+      preCtaBtn.addEventListener('click', () => {
+        if (this.prerelease) {
+          this.onOpenReleaseModal(this.prerelease);
+        }
       });
     }
 

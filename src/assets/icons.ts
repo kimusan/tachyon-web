@@ -285,5 +285,20 @@ export const icons = {
       <path d="M9 18h6"/>
       <path d="M10 22h4"/>
     </svg>
+  `,
+
+  flask: (cls = 'w-4 h-4') => `
+    <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 2v7.31a2 2 0 0 1-.37 1.16L4.17 18.5A2 2 0 0 0 5.75 22h12.5a2 2 0 0 0 1.58-3.5l-5.46-8.03A2 2 0 0 1 14 9.31V2"/>
+      <path d="M8.5 2h7"/>
+      <path d="M7 16h10"/>
+    </svg>
+  `,
+
+  tag: (cls = 'w-4 h-4') => `
+    <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
+      <path d="M7 7h.01"/>
+    </svg>
   `
 };

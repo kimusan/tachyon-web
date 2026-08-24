@@ -18,16 +18,16 @@ export class AboutMaintainerComponent {
                 
                 <!-- Profile Image -->
                 <div class="relative group">
-                  <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 p-1 shadow-xl shadow-brand-500/20 group-hover:shadow-brand-500/35 transition-all">
+                  <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 p-1 shadow-xl shadow-brand-500/20 group-hover:shadow-brand-500/35 transition-all">
                     <div class="w-full h-full rounded-[12px] overflow-hidden bg-slate-900">
                       <picture>
                         <source srcset="/images/kim-schulz.webp" type="image/webp">
                         <img 
                           src="/images/kim-schulz.png" 
                           alt="Kim Schulz - Creator & Maintainer of Tachyon Webmail" 
-                          class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                          width="256"
-                          height="256"
+                          class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                          width="300"
+                          height="300"
                           loading="lazy"
                         />
                       </picture>

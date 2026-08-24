@@ -16,14 +16,24 @@ export class AboutMaintainerComponent {
               <!-- Left Profile Card (4 cols) -->
               <div class="lg:col-span-4 flex flex-col items-center text-center p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-4">
                 
-                <!-- Avatar / Monogram -->
-                <div class="relative">
-                  <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 p-0.5 shadow-lg shadow-brand-500/20">
-                    <div class="w-full h-full rounded-[14px] bg-slate-900 flex items-center justify-center text-white font-mono font-bold text-2xl">
-                      KS
+                <!-- Profile Image -->
+                <div class="relative group">
+                  <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 p-1 shadow-xl shadow-brand-500/20 group-hover:shadow-brand-500/35 transition-all">
+                    <div class="w-full h-full rounded-[12px] overflow-hidden bg-slate-900">
+                      <picture>
+                        <source srcset="/images/kim-schulz.webp" type="image/webp">
+                        <img 
+                          src="/images/kim-schulz.png" 
+                          alt="Kim Schulz - Creator & Maintainer of Tachyon Webmail" 
+                          class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                          width="256"
+                          height="256"
+                          loading="lazy"
+                        />
+                      </picture>
                     </div>
                   </div>
-                  <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white" title="Active Maintainer">
+                  <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white shadow-md" title="Active Lead Maintainer">
                     ${icons.code('w-3.5 h-3.5')}
                   </div>
                 </div>

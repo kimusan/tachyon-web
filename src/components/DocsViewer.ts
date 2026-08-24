@@ -1,6 +1,7 @@
 import { icons } from '../assets/icons';
 import { GitHubWikiService, ParsedDocResult } from '../services/github-wiki';
 import { WIKI_PAGES, PROJECT_CONFIG } from '../config/project-info';
+import { GiscusWidget } from './GiscusWidget';
 
 export class DocsViewerComponent {
   private currentSlug: string = 'Home';
@@ -8,12 +9,18 @@ export class DocsViewerComponent {
   private isLoading: boolean = false;
   private errorMessage: string | null = null;
   private searchQuery: string = '';
+  private docGiscus: GiscusWidget | null = null;
 
   constructor() {
     //
   }
 
   public async loadPage(slug: string = 'Home') {
+    if (this.docGiscus) {
+      this.docGiscus.destroy();
+      this.docGiscus = null;
+    }
+
     this.currentSlug = slug || 'Home';
     this.isLoading = true;
     this.errorMessage = null;
@@ -130,13 +137,13 @@ export class DocsViewerComponent {
               <!-- Quick Links Box -->
               <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-xs space-y-2">
                 <div class="font-semibold text-slate-900 dark:text-white">Community & Help</div>
+                <a href="#/community" class="block text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-cyan-400 flex items-center gap-1.5 transition-colors">
+                  ${icons.messageSquare('w-3.5 h-3.5')}
+                  <span>Community Board</span>
+                </a>
                 <a href="${PROJECT_CONFIG.githubNewIssueUrl}" target="_blank" class="block text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-cyan-400 flex items-center gap-1.5 transition-colors">
                   ${icons.bug('w-3.5 h-3.5')}
                   <span>Report an Issue</span>
-                </a>
-                <a href="${PROJECT_CONFIG.githubDiscussionsUrl}" target="_blank" class="block text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-cyan-400 flex items-center gap-1.5 transition-colors">
-                  ${icons.messageSquare('w-3.5 h-3.5')}
-                  <span>Ask in Discussions</span>
                 </a>
               </div>
             </aside>
@@ -297,6 +304,15 @@ export class DocsViewerComponent {
     const prevPage = currentIdx > 0 ? WIKI_PAGES[currentIdx - 1] : null;
     const nextPage = currentIdx < WIKI_PAGES.length - 1 ? WIKI_PAGES[currentIdx + 1] : null;
 
+    // Create Giscus widget for this document page
+    this.docGiscus = new GiscusWidget({
+      containerId: 'doc-giscus-container',
+      mapping: 'specific',
+      term: `Docs: ${this.docData.title}`,
+      category: 'General',
+      inputPosition: 'top'
+    });
+
     return `
       <article class="space-y-6 max-w-full">
         
@@ -366,6 +382,35 @@ export class DocsViewerComponent {
               </div>
             </a>
           ` : ''}
+        </div>
+
+        <!-- Embedded Page Discussions Section -->
+        <div class="pt-10 mt-10 border-t border-slate-200 dark:border-slate-800 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                ${icons.messageSquare('w-4 h-4 text-brand-500')}
+                <span>Questions & Discussion</span>
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Discuss this documentation page or ask questions via GitHub Discussions.
+              </p>
+            </div>
+
+            <a 
+              href="${PROJECT_CONFIG.githubDiscussionsUrl}/categories/q-a" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="text-xs font-semibold text-brand-600 dark:text-cyan-400 hover:underline flex items-center gap-1"
+            >
+              <span>Ask on GitHub</span>
+              ${icons.externalLink('w-3 h-3')}
+            </a>
+          </div>
+
+          <div class="p-4 sm:p-6 rounded-2xl bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 shadow-inner">
+            ${this.docGiscus.render()}
+          </div>
         </div>
 
       </article>
@@ -486,6 +531,17 @@ export class DocsViewerComponent {
       retryBtn.addEventListener('click', () => {
         this.loadPage(this.currentSlug);
       });
+    }
+
+    if (this.docGiscus) {
+      this.docGiscus.mount();
+    }
+  }
+
+  public destroy() {
+    if (this.docGiscus) {
+      this.docGiscus.destroy();
+      this.docGiscus = null;
     }
   }
 }

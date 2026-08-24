@@ -10,6 +10,7 @@ import { LineageHistoryComponent } from './components/LineageHistory';
 import { InstallTabsComponent } from './components/InstallTabs';
 import { ComparisonTableComponent } from './components/ComparisonTable';
 import { DocsViewerComponent } from './components/DocsViewer';
+import { CommunityViewComponent } from './components/CommunityView';
 import { ReleaseModalComponent } from './components/ReleaseModal';
 import { IssueTrackerCTAComponent } from './components/IssueTrackerCTA';
 import { FooterComponent } from './components/Footer';
@@ -24,6 +25,7 @@ class App {
   private installTabs: InstallTabsComponent;
   private comparisonTable: ComparisonTableComponent;
   private docsViewer: DocsViewerComponent;
+  private communityView: CommunityViewComponent;
   private releaseModal: ReleaseModalComponent;
   private issueTrackerCTA: IssueTrackerCTAComponent;
   private footer: FooterComponent;
@@ -41,6 +43,7 @@ class App {
     this.installTabs = new InstallTabsComponent();
     this.comparisonTable = new ComparisonTableComponent();
     this.docsViewer = new DocsViewerComponent();
+    this.communityView = new CommunityViewComponent();
     this.issueTrackerCTA = new IssueTrackerCTAComponent();
     this.footer = new FooterComponent();
   }
@@ -57,19 +60,27 @@ class App {
 
     const hash = window.location.hash;
     const isDocs = hash.startsWith('#/docs');
+    const isCommunity = hash.startsWith('#/community') || hash.startsWith('#/discussions');
+
+    let mainContentHtml = this.renderLandingPage();
+    if (isDocs) {
+      mainContentHtml = this.docsViewer.render();
+    } else if (isCommunity) {
+      mainContentHtml = this.communityView.render();
+    }
 
     appEl.innerHTML = `
       ${this.navbar.render()}
       
       <div id="main-view-container">
-        ${isDocs ? this.docsViewer.render() : this.renderLandingPage()}
+        ${mainContentHtml}
       </div>
 
       ${this.footer.render()}
       ${this.releaseModal.render()}
     `;
 
-    this.bindEvents(isDocs);
+    this.bindEvents(isDocs, isCommunity);
   }
 
   private renderLandingPage(): string {
@@ -85,7 +96,7 @@ class App {
     `;
   }
 
-  private bindEvents(isDocs: boolean) {
+  private bindEvents(isDocs: boolean, isCommunity: boolean) {
     this.navbar.bindEvents();
     this.releaseModal.bindEvents();
 
@@ -93,6 +104,8 @@ class App {
       this.docsViewer.bindEvents();
       const slug = this.getDocSlugFromHash();
       this.docsViewer.loadPage(slug);
+    } else if (isCommunity) {
+      this.communityView.mount();
     } else {
       this.hero.bindEvents();
       this.installTabs.bindEvents();
@@ -112,34 +125,39 @@ class App {
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash;
       const isDocs = hash.startsWith('#/docs');
+      const isCommunity = hash.startsWith('#/community') || hash.startsWith('#/discussions');
       const container = document.getElementById('main-view-container');
 
+      if (!container) return;
+
+      // Cleanup prior views
+      this.docsViewer.destroy();
+      this.communityView.destroy();
+
       if (isDocs) {
-        if (!document.getElementById('docs-viewer-container')) {
-          if (container) {
-            container.innerHTML = this.docsViewer.render();
-            this.docsViewer.bindEvents();
-          }
-        }
+        container.innerHTML = this.docsViewer.render();
+        this.docsViewer.bindEvents();
         const slug = this.getDocSlugFromHash();
         this.docsViewer.loadPage(slug);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (isCommunity) {
+        container.innerHTML = this.communityView.render();
+        this.communityView.mount();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        // If transitioning from Docs back to Landing Page
-        if (!document.getElementById('features')) {
-          if (container) {
-            container.innerHTML = this.renderLandingPage();
-            this.hero.bindEvents();
-            this.installTabs.bindEvents();
-          }
-        }
+        container.innerHTML = this.renderLandingPage();
+        this.hero.bindEvents();
+        this.installTabs.bindEvents();
 
-        // Smooth scroll to section if standard anchor
+        // Smooth scroll to section if standard anchor (e.g. #features)
         if (hash && !hash.startsWith('#/')) {
           const targetId = hash.substring(1);
           const targetEl = document.getElementById(targetId);
           if (targetEl) {
             targetEl.scrollIntoView({ behavior: 'smooth' });
           }
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
     });

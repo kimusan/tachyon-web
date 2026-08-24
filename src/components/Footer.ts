@@ -46,9 +46,10 @@ export class FooterComponent {
                 Community
               </h4>
               <ul class="space-y-2 text-xs">
+                <li><a href="#/community" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5 font-semibold text-brand-600 dark:text-cyan-400">${icons.messageSquare('w-3.5 h-3.5')}<span>Community & Discussions</span></a></li>
                 <li><a href="${PROJECT_CONFIG.githubUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.github('w-3.5 h-3.5')}<span>GitHub Repository</span></a></li>
                 <li><a href="${PROJECT_CONFIG.githubIssuesUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.bug('w-3.5 h-3.5')}<span>Issue Tracker</span></a></li>
-                <li><a href="${PROJECT_CONFIG.githubDiscussionsUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.messageSquare('w-3.5 h-3.5')}<span>Discussions</span></a></li>
+                <li><a href="${PROJECT_CONFIG.githubDiscussionsUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.externalLink('w-3.5 h-3.5')}<span>Discussions on GitHub</span></a></li>
                 <li><a href="${PROJECT_CONFIG.nextcloudAppUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.layers('w-3.5 h-3.5')}<span>Nextcloud App Store</span></a></li>
                 <li><a href="${PROJECT_CONFIG.githubWikiWebUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.bookOpen('w-3.5 h-3.5')}<span>GitHub Wiki</span></a></li>
               </ul>

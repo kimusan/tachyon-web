@@ -105,6 +105,10 @@ export class NavbarComponent {
                 ${icons.bookOpen('w-4 h-4')}
                 <span>Docs</span>
               </a>
+              <a href="#/community" class="px-3 py-2 rounded-lg hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors flex items-center gap-1.5">
+                ${icons.messageSquare('w-4 h-4')}
+                <span>Community</span>
+              </a>
             </nav>
 
             <!-- Actions (Theme Toggle, GitHub, Mobile Menu) -->
@@ -176,6 +180,10 @@ export class NavbarComponent {
           <a href="#/docs" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-brand-600 dark:text-brand-400 font-semibold flex items-center gap-2">
             ${icons.bookOpen('w-5 h-5')}
             <span>Documentation (Live Wiki)</span>
+          </a>
+          <a href="#/community" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+            ${icons.messageSquare('w-5 h-5')}
+            <span>Community & Discussions</span>
           </a>
           <div class="pt-2">
             <a 

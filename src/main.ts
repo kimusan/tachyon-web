@@ -9,6 +9,7 @@ import { FeaturesComponent } from './components/Features';
 import { LineageHistoryComponent } from './components/LineageHistory';
 import { InstallTabsComponent } from './components/InstallTabs';
 import { ComparisonTableComponent } from './components/ComparisonTable';
+import { AboutMaintainerComponent } from './components/AboutMaintainer';
 import { DocsViewerComponent } from './components/DocsViewer';
 import { CommunityViewComponent } from './components/CommunityView';
 import { ReleaseModalComponent } from './components/ReleaseModal';
@@ -24,6 +25,7 @@ class App {
   private history: LineageHistoryComponent;
   private installTabs: InstallTabsComponent;
   private comparisonTable: ComparisonTableComponent;
+  private aboutMaintainer: AboutMaintainerComponent;
   private docsViewer: DocsViewerComponent;
   private communityView: CommunityViewComponent;
   private releaseModal: ReleaseModalComponent;
@@ -42,6 +44,7 @@ class App {
     this.history = new LineageHistoryComponent();
     this.installTabs = new InstallTabsComponent();
     this.comparisonTable = new ComparisonTableComponent();
+    this.aboutMaintainer = new AboutMaintainerComponent();
     this.docsViewer = new DocsViewerComponent();
     this.communityView = new CommunityViewComponent();
     this.issueTrackerCTA = new IssueTrackerCTAComponent();
@@ -91,6 +94,7 @@ class App {
         ${this.history.render()}
         ${this.installTabs.render()}
         ${this.comparisonTable.render()}
+        ${this.aboutMaintainer.render()}
         ${this.issueTrackerCTA.render()}
       </main>
     `;

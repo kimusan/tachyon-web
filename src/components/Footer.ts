@@ -52,6 +52,7 @@ export class FooterComponent {
                 <li><a href="${PROJECT_CONFIG.githubDiscussionsUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.externalLink('w-3.5 h-3.5')}<span>Discussions on GitHub</span></a></li>
                 <li><a href="${PROJECT_CONFIG.nextcloudAppUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.layers('w-3.5 h-3.5')}<span>Nextcloud App Store</span></a></li>
                 <li><a href="${PROJECT_CONFIG.githubWikiWebUrl}" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.bookOpen('w-3.5 h-3.5')}<span>GitHub Wiki</span></a></li>
+                <li><a href="https://schulz.dk" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5">${icons.globe('w-3.5 h-3.5')}<span>Maintainer: schulz.dk</span></a></li>
               </ul>
             </div>
 
@@ -60,7 +61,7 @@ export class FooterComponent {
           <!-- Bottom Copyright & Lineage Acknowledgement -->
           <div class="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
             <div>
-              © 2025 - present Tachyon • © 2020 - 2024 SnappyMail • © 2013 - 2022 RainLoop
+              © 2025 - present Tachyon by <a href="https://schulz.dk" target="_blank" class="underline hover:text-brand-500">Kim Schulz</a> • © 2020 - 2024 SnappyMail • © 2013 - 2022 RainLoop
             </div>
             <div class="flex items-center gap-4">
               <span>tachyonmail.app</span>

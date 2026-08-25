@@ -42,7 +42,7 @@ class App {
     );
     this.features = new FeaturesComponent();
     this.history = new LineageHistoryComponent();
-    this.installTabs = new InstallTabsComponent();
+    this.installTabs = new InstallTabsComponent(this.currentStableRelease);
     this.comparisonTable = new ComparisonTableComponent();
     this.aboutMaintainer = new AboutMaintainerComponent();
     this.docsViewer = new DocsViewerComponent();
@@ -175,6 +175,7 @@ class App {
 
       this.navbar.setReleases(summary.stable, summary.prerelease);
       this.hero.updateReleases(summary.stable, summary.prerelease);
+      this.installTabs.updateRelease(summary.stable);
       this.releaseModal.setReleases(summary.stable, summary.prerelease);
     } catch (err) {
       console.warn('Could not fetch live GitHub releases, using fallback.', err);

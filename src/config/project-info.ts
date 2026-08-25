@@ -190,16 +190,16 @@ docker run -d \\
   ghcr.io/kimusan/tachyon:latest`,
   
   debian: `# Download and install the latest .deb package on Debian/Ubuntu
-wget https://github.com/kimusan/Tachyon/releases/latest/download/tachyon_latest_all.deb
-sudo apt install ./tachyon_latest_all.deb
+wget https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon_3.2.8-1_all.deb
+sudo apt install ./tachyon_3.2.8-1_all.deb
 
-# Verify PHP 8.2+ requirement and start web server
+# Verify PHP 8.2+ requirement and reload web server
 sudo systemctl reload nginx # or apache2`,
 
-  tarball: `# Download and extract standard release tarball
+  tarball: `# Download and extract the latest release archive
 cd /var/www/html
-wget https://github.com/kimusan/Tachyon/releases/latest/download/tachyon-latest.tar.gz
-tar -xzf tachyon-latest.tar.gz
+wget https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8.tar.gz
+tar -xzf tachyon-3.2.8.tar.gz
 chown -R www-data:www-data data/
 
 # Open your browser and navigate to:
@@ -211,8 +211,8 @@ chown -R www-data:www-data data/
 
 # Or install manually into your Nextcloud apps directory:
 cd /var/www/nextcloud/apps/
-wget https://github.com/kimusan/Tachyon/releases/latest/download/tachyon-latest-nextcloud.tar.gz
-tar -xzf tachyon-latest-nextcloud.tar.gz`
+wget https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8-nextcloud.tar.gz
+tar -xzf tachyon-3.2.8-nextcloud.tar.gz`
 };
 
 export const COMPARISON_DATA = [

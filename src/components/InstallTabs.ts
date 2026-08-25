@@ -1,10 +1,23 @@
 import { icons } from '../assets/icons';
-import { INSTALL_SNIPPETS } from '../config/project-info';
+import { INSTALL_SNIPPETS, ReleaseInfo, FALLBACK_RELEASE } from '../config/project-info';
 
 type InstallTabKey = 'docker' | 'debian' | 'tarball' | 'nextcloud';
 
 export class InstallTabsComponent {
   private activeTab: InstallTabKey = 'docker';
+  private release: ReleaseInfo = FALLBACK_RELEASE;
+
+  constructor(release: ReleaseInfo = FALLBACK_RELEASE) {
+    this.release = release;
+  }
+
+  public updateRelease(release: ReleaseInfo) {
+    this.release = release;
+    const codeEl = document.getElementById('install-code-content');
+    if (codeEl) {
+      codeEl.textContent = this.getSnippet(this.activeTab);
+    }
+  }
 
   public render(): string {
     const tabs: { key: InstallTabKey; label: string; icon: string }[] = [
@@ -93,7 +106,65 @@ export class InstallTabsComponent {
   }
 
   private getSnippet(tab: InstallTabKey): string {
-    return INSTALL_SNIPPETS[tab] || INSTALL_SNIPPETS.docker;
+    const rawVersion = this.release.version || 'v3.2.8';
+    const cleanVersion = rawVersion.replace(/^v/i, '');
+    
+    // Find deb asset
+    const debAsset = this.release.assets?.find(a => a.type === 'deb');
+    const debUrl = debAsset ? debAsset.downloadUrl : `https://github.com/kimusan/Tachyon/releases/download/${rawVersion}/tachyon_${cleanVersion}-1_all.deb`;
+    const debFilename = debAsset ? debAsset.name : `tachyon_${cleanVersion}-1_all.deb`;
+
+    // Find tar asset
+    const tarAsset = this.release.assets?.find(a => a.type === 'tar');
+    const tarUrl = tarAsset ? tarAsset.downloadUrl : `https://github.com/kimusan/Tachyon/releases/download/${rawVersion}/tachyon-${cleanVersion}.tar.gz`;
+    const tarFilename = tarAsset ? tarAsset.name : `tachyon-${cleanVersion}.tar.gz`;
+
+    // Find nextcloud asset
+    const ncAsset = this.release.assets?.find(a => a.type === 'nextcloud');
+    const ncUrl = ncAsset ? ncAsset.downloadUrl : `https://github.com/kimusan/Tachyon/releases/download/${rawVersion}/tachyon-${cleanVersion}-nextcloud.tar.gz`;
+    const ncFilename = ncAsset ? ncAsset.name : `tachyon-${cleanVersion}-nextcloud.tar.gz`;
+
+    switch (tab) {
+      case 'docker':
+        return `# Pull and run the official Tachyon Docker container
+docker run -d \\
+  --name tachyon-webmail \\
+  -p 8080:80 \\
+  -v tachyon_data:/var/www/html/data \\
+  --restart unless-stopped \\
+  ghcr.io/kimusan/tachyon:latest`;
+
+      case 'debian':
+        return `# Download and install Tachyon on Debian/Ubuntu (${rawVersion})
+wget ${debUrl}
+sudo apt install ./${debFilename}
+
+# Verify PHP 8.2+ requirement and reload web server
+sudo systemctl reload nginx # or apache2`;
+
+      case 'tarball':
+        return `# Download and extract Tachyon (${rawVersion}) release archive
+cd /var/www/html
+wget ${tarUrl}
+tar -xzf ${tarFilename}
+chown -R www-data:www-data data/
+
+# Open your browser and navigate to:
+# http://your-domain.com/?admin`;
+
+      case 'nextcloud':
+        return `# In your Nextcloud web interface:
+# 1. Navigate to Apps -> Search for "Tachyon"
+# 2. Click "Download and enable"
+
+# Or install manually into your Nextcloud apps directory:
+cd /var/www/nextcloud/apps/
+wget ${ncUrl}
+tar -xzf ${ncFilename}`;
+
+      default:
+        return INSTALL_SNIPPETS[tab] || INSTALL_SNIPPETS.docker;
+    }
   }
 
   public bindEvents() {

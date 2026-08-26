@@ -61,7 +61,7 @@ export class TranslationsViewComponent {
             </div>
 
             <a 
-              href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/plugins/translations/langs"
+              href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-sm transition-all"
@@ -182,7 +182,7 @@ export class TranslationsViewComponent {
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
               <div class="font-bold text-slate-900 dark:text-white">1. Find Your Language</div>
-              <p>Locate your language file under <code>plugins/translations/langs/{code}/</code> (contains <code>user.json</code> and <code>admin.json</code>).</p>
+              <p>Locate your language folder under <code>tachyon/v/0.0.0/app/localization/{code}/</code> (contains <code>user.json</code>, <code>admin.json</code>, and <code>static.json</code>).</p>
             </div>
 
             <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
@@ -198,15 +198,15 @@ export class TranslationsViewComponent {
 
           <div class="pt-2 flex items-center justify-between flex-wrap gap-3">
             <span class="text-xs text-slate-500 dark:text-slate-400">
-              Need to add a completely new language? Create a new directory in <code>langs/</code> with the ISO code.
+              Need to add a completely new language? Create a new directory in <code>localization/</code> with the ISO code.
             </span>
             <a 
-              href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/plugins/translations"
+              href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-cyan-400 hover:underline"
             >
-              <span>View Translation Plugin Source</span>
+              <span>View Localization Directory on GitHub</span>
               ${icons.externalLink('w-3.5 h-3.5')}
             </a>
           </div>
@@ -232,7 +232,7 @@ export class TranslationsViewComponent {
         ? 'bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-cyan-300 border-brand-200 dark:border-brand-800'
         : 'bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border-amber-200 dark:border-amber-800';
 
-    const editUrl = `https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/plugins/translations/langs/${l.code}`;
+    const editUrl = `https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization/${l.code}`;
 
     return `
       <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">

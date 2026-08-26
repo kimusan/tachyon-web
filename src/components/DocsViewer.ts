@@ -2,6 +2,7 @@ import { icons } from '../assets/icons';
 import { GitHubWikiService, ParsedDocResult } from '../services/github-wiki';
 import { WIKI_PAGES, PROJECT_CONFIG } from '../config/project-info';
 import { GiscusWidget } from './GiscusWidget';
+import { TranslationsViewComponent } from './TranslationsView';
 
 export class DocsViewerComponent {
   private currentSlug: string = 'Home';
@@ -10,6 +11,7 @@ export class DocsViewerComponent {
   private errorMessage: string | null = null;
   private searchQuery: string = '';
   private docGiscus: GiscusWidget | null = null;
+  private translationsView: TranslationsViewComponent = new TranslationsViewComponent();
 
   constructor() {
     //
@@ -22,9 +24,22 @@ export class DocsViewerComponent {
     }
 
     this.currentSlug = slug || 'Home';
+    this.closeMobileMenus();
+
+    // Check if loading the specialized Translations dashboard
+    if (this.currentSlug.toLowerCase() === 'translations') {
+      this.isLoading = false;
+      this.errorMessage = null;
+      this.docData = null;
+      this.updateContent();
+      await this.translationsView.loadData();
+      this.bindDocEvents();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     this.isLoading = true;
     this.errorMessage = null;
-    this.closeMobileMenus();
     this.updateContent();
 
     try {
@@ -241,6 +256,10 @@ export class DocsViewerComponent {
   }
 
   private renderToc(isMobile = false): string {
+    if (this.currentSlug.toLowerCase() === 'translations') {
+      return `<p class="text-slate-400 italic text-xs py-1">Interactive Overview Table</p>`;
+    }
+
     if (!this.docData || !this.docData.toc || this.docData.toc.length === 0) {
       return `<p class="text-slate-400 italic text-xs py-1">No section headers on this page</p>`;
     }
@@ -248,20 +267,25 @@ export class DocsViewerComponent {
     return `
       <nav class="space-y-1">
         ${this.docData.toc.map(item => `
-          <a 
-            href="#${item.id}"
-            class="${isMobile ? 'mobile-toc-anchor' : ''} block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-cyan-300 transition-colors truncate py-1 text-xs ${
+          <button 
+            type="button"
+            data-toc-target="${item.id}"
+            class="${isMobile ? 'mobile-toc-anchor' : 'docs-toc-anchor'} block w-full text-left text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-cyan-300 transition-colors truncate py-1 text-xs ${
               item.level === 3 ? 'pl-3 text-[11px] text-slate-500' : ''
             }"
           >
             ${item.text}
-          </a>
+          </button>
         `).join('')}
       </nav>
     `;
   }
 
   private renderContentBody(): string {
+    if (this.currentSlug.toLowerCase() === 'translations') {
+      return this.translationsView.render();
+    }
+
     if (this.isLoading) {
       return `
         <div class="space-y-6 animate-pulse py-8">
@@ -514,10 +538,10 @@ export class DocsViewerComponent {
       });
     }
 
-    // Delegate click on mobile doc links and TOC anchors to auto-close menus
+    // Delegate click on mobile doc links to auto-close menus
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      if (target.closest('.mobile-doc-link') || target.closest('.mobile-toc-anchor')) {
+      if (target.closest('.mobile-doc-link')) {
         this.closeMobileMenus();
       }
     });
@@ -526,12 +550,38 @@ export class DocsViewerComponent {
   }
 
   private bindDocEvents() {
+    if (this.currentSlug.toLowerCase() === 'translations') {
+      this.translationsView.bindEvents();
+      return;
+    }
+
     const retryBtn = document.getElementById('docs-retry-btn');
     if (retryBtn) {
       retryBtn.addEventListener('click', () => {
         this.loadPage(this.currentSlug);
       });
     }
+
+    // In-page smooth scrolling for TOC buttons without breaking SPA routing
+    document.querySelectorAll('[data-toc-target]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = btn.getAttribute('data-toc-target');
+        if (targetId) {
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            const headerOffset = 90;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        }
+        this.closeMobileMenus();
+      });
+    });
 
     if (this.docGiscus) {
       this.docGiscus.mount();

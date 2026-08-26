@@ -177,6 +177,12 @@ export const WIKI_PAGES: WikiPageMeta[] = [
     title: 'IMAP Sync Tool',
     category: 'Developer & Advanced',
     description: 'Command line utility to synchronize mailboxes between IMAP accounts.'
+  },
+  {
+    slug: 'Translations',
+    title: 'Translations & Localization Status',
+    category: 'Developer & Advanced',
+    description: 'Live translation coverage for all 36 supported languages and contribution guide.'
   }
 ];
 

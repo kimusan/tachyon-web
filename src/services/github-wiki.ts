@@ -109,10 +109,7 @@ export class GitHubWikiService {
         });
       }
 
-      return `<h${depth} id="${id}" class="group relative flex items-center">
-        <a href="#${id}" class="no-underline text-inherit hover:text-brand-500">${text}</a>
-        <a href="#${id}" class="opacity-0 group-hover:opacity-100 ml-2 text-slate-400 hover:text-brand-500 text-sm no-underline" aria-label="Anchor">#</a>
-      </h${depth}>`;
+      return `<h${depth} id="${id}">${text}</h${depth}>`;
     };
 
     // Transform internal wiki links:

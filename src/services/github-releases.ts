@@ -21,6 +21,7 @@ export class GitHubReleasesService {
     if (name.endsWith('nextcloud.tar.gz')) return 'nextcloud';
     if (name.endsWith('owncloud.tar.gz')) return 'owncloud';
     if (name.endsWith('.deb')) return 'deb';
+    if (name.endsWith('.rpm')) return 'rpm';
     if (name.endsWith('.tar.gz') || name.endsWith('.tgz')) return 'tar';
     if (name.endsWith('.zip')) return 'zip';
     if (name.includes('plugin') || name.endsWith('.tgz')) return 'plugin';

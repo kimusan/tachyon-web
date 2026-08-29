@@ -1,7 +1,7 @@
 import { icons } from '../assets/icons';
-import { INSTALL_SNIPPETS, ReleaseInfo, FALLBACK_RELEASE } from '../config/project-info';
+import { INSTALL_SNIPPETS, ReleaseInfo, FALLBACK_RELEASE, PROJECT_CONFIG } from '../config/project-info';
 
-type InstallTabKey = 'docker' | 'debian' | 'tarball' | 'nextcloud';
+type InstallTabKey = 'docker' | 'debian' | 'rpm' | 'tarball' | 'nextcloud';
 
 export class InstallTabsComponent {
   private activeTab: InstallTabKey = 'docker';
@@ -23,6 +23,7 @@ export class InstallTabsComponent {
     const tabs: { key: InstallTabKey; label: string; icon: string }[] = [
       { key: 'docker', label: 'Docker Container', icon: icons.packageIcon('w-4 h-4') },
       { key: 'debian', label: 'Debian / Ubuntu (.deb)', icon: icons.server('w-4 h-4') },
+      { key: 'rpm', label: 'RHEL / Fedora (.rpm)', icon: icons.cpu('w-4 h-4') },
       { key: 'tarball', label: 'Manual Archive (.tar.gz)', icon: icons.terminal('w-4 h-4') },
       { key: 'nextcloud', label: 'Nextcloud App', icon: icons.layers('w-4 h-4') },
     ];
@@ -50,7 +51,7 @@ export class InstallTabsComponent {
               ${tabs.map(tab => `
                 <button 
                   data-install-tab="${tab.key}"
-                  class="install-tab-btn flex-1 min-w-[140px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  class="install-tab-btn flex-1 min-w-[130px] flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                     this.activeTab === tab.key 
                       ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' 
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -106,23 +107,7 @@ export class InstallTabsComponent {
   }
 
   private getSnippet(tab: InstallTabKey): string {
-    const rawVersion = this.release.version || 'v3.2.8';
-    const cleanVersion = rawVersion.replace(/^v/i, '');
-    
-    // Find deb asset
-    const debAsset = this.release.assets?.find(a => a.type === 'deb');
-    const debUrl = debAsset ? debAsset.downloadUrl : `https://github.com/kimusan/Tachyon/releases/download/${rawVersion}/tachyon_${cleanVersion}-1_all.deb`;
-    const debFilename = debAsset ? debAsset.name : `tachyon_${cleanVersion}-1_all.deb`;
-
-    // Find tar asset
-    const tarAsset = this.release.assets?.find(a => a.type === 'tar');
-    const tarUrl = tarAsset ? tarAsset.downloadUrl : `https://github.com/kimusan/Tachyon/releases/download/${rawVersion}/tachyon-${cleanVersion}.tar.gz`;
-    const tarFilename = tarAsset ? tarAsset.name : `tachyon-${cleanVersion}.tar.gz`;
-
-    // Find nextcloud asset
-    const ncAsset = this.release.assets?.find(a => a.type === 'nextcloud');
-    const ncUrl = ncAsset ? ncAsset.downloadUrl : `https://github.com/kimusan/Tachyon/releases/download/${rawVersion}/tachyon-${cleanVersion}-nextcloud.tar.gz`;
-    const ncFilename = ncAsset ? ncAsset.name : `tachyon-${cleanVersion}-nextcloud.tar.gz`;
+    const rawVersion = this.release.version || 'v4.0.5';
 
     switch (tab) {
       case 'docker':
@@ -132,21 +117,29 @@ docker run -d \\
   -p 8080:80 \\
   -v tachyon_data:/var/www/html/data \\
   --restart unless-stopped \\
-  ghcr.io/kimusan/tachyon:latest`;
+  ghcr.io/${PROJECT_CONFIG.githubRepo.toLowerCase()}:latest`;
 
       case 'debian':
-        return `# Download and install Tachyon on Debian/Ubuntu (${rawVersion})
-wget ${debUrl}
-sudo apt install ./${debFilename}
+        return `# Download and install the latest .deb package on Debian/Ubuntu (${rawVersion})
+wget https://github.com/${PROJECT_CONFIG.githubRepo}/releases/latest/download/tachyon_latest_all.deb
+sudo apt install ./tachyon_latest_all.deb
 
 # Verify PHP 8.2+ requirement and reload web server
 sudo systemctl reload nginx # or apache2`;
 
+      case 'rpm':
+        return `# Download and install the latest .rpm package on RHEL/Fedora/CentOS/AlmaLinux (${rawVersion})
+wget https://github.com/${PROJECT_CONFIG.githubRepo}/releases/latest/download/tachyon_latest_all.rpm
+sudo dnf install ./tachyon_latest_all.rpm # or sudo rpm -Uvh ./tachyon_latest_all.rpm
+
+# Verify PHP 8.2+ requirement and reload web server
+sudo systemctl reload nginx # or httpd`;
+
       case 'tarball':
-        return `# Download and extract Tachyon (${rawVersion}) release archive
+        return `# Download and extract the latest release archive (${rawVersion})
 cd /var/www/html
-wget ${tarUrl}
-tar -xzf ${tarFilename}
+wget https://github.com/${PROJECT_CONFIG.githubRepo}/releases/latest/download/tachyon-latest.tar.gz
+tar -xzf tachyon-latest.tar.gz
 chown -R www-data:www-data data/
 
 # Open your browser and navigate to:
@@ -159,8 +152,8 @@ chown -R www-data:www-data data/
 
 # Or install manually into your Nextcloud apps directory:
 cd /var/www/nextcloud/apps/
-wget ${ncUrl}
-tar -xzf ${ncFilename}`;
+wget https://github.com/${PROJECT_CONFIG.githubRepo}/releases/latest/download/tachyon-latest-nextcloud.tar.gz
+tar -xzf tachyon-latest-nextcloud.tar.gz`;
 
       default:
         return INSTALL_SNIPPETS[tab] || INSTALL_SNIPPETS.docker;

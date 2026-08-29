@@ -9,7 +9,7 @@ export interface ReleaseAsset {
   name: string;
   downloadUrl: string;
   size: string;
-  type: 'tar' | 'zip' | 'deb' | 'nextcloud' | 'owncloud' | 'plugin' | 'other';
+  type: 'tar' | 'zip' | 'deb' | 'rpm' | 'nextcloud' | 'owncloud' | 'plugin' | 'other';
 }
 
 export interface ReleaseInfo {
@@ -196,16 +196,23 @@ docker run -d \\
   ghcr.io/kimusan/tachyon:latest`,
   
   debian: `# Download and install the latest .deb package on Debian/Ubuntu
-wget https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon_3.2.8-1_all.deb
-sudo apt install ./tachyon_3.2.8-1_all.deb
+wget https://github.com/kimusan/Tachyon/releases/latest/download/tachyon_latest_all.deb
+sudo apt install ./tachyon_latest_all.deb
 
 # Verify PHP 8.2+ requirement and reload web server
 sudo systemctl reload nginx # or apache2`,
 
+  rpm: `# Download and install the latest .rpm package on RHEL/Fedora/CentOS/AlmaLinux
+wget https://github.com/kimusan/Tachyon/releases/latest/download/tachyon_latest_all.rpm
+sudo dnf install ./tachyon_latest_all.rpm # or sudo rpm -Uvh ./tachyon_latest_all.rpm
+
+# Verify PHP 8.2+ requirement and reload web server
+sudo systemctl reload nginx # or httpd`,
+
   tarball: `# Download and extract the latest release archive
 cd /var/www/html
-wget https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8.tar.gz
-tar -xzf tachyon-3.2.8.tar.gz
+wget https://github.com/kimusan/Tachyon/releases/latest/download/tachyon-latest.tar.gz
+tar -xzf tachyon-latest.tar.gz
 chown -R www-data:www-data data/
 
 # Open your browser and navigate to:
@@ -217,8 +224,8 @@ chown -R www-data:www-data data/
 
 # Or install manually into your Nextcloud apps directory:
 cd /var/www/nextcloud/apps/
-wget https://github.com/kimusan/Tachyon/releases/download/v3.2.8/tachyon-3.2.8-nextcloud.tar.gz
-tar -xzf tachyon-3.2.8-nextcloud.tar.gz`
+wget https://github.com/kimusan/Tachyon/releases/latest/download/tachyon-latest-nextcloud.tar.gz
+tar -xzf tachyon-latest-nextcloud.tar.gz`
 };
 
 export const COMPARISON_DATA = [

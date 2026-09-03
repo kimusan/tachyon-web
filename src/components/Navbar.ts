@@ -62,8 +62,8 @@ export class NavbarComponent {
             <!-- Logo & Brand -->
             <div class="flex items-center gap-3">
               <a href="#" class="flex items-center gap-2.5 text-slate-900 dark:text-white font-bold text-xl tracking-tight group">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
-                  ${icons.zap('w-5 h-5')}
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform p-1.5">
+                  ${icons.tachyonMark('w-6 h-6 text-white')}
                 </div>
                 <span>Tachyon</span>
               </a>

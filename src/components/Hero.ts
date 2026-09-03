@@ -211,8 +211,9 @@ export class HeroComponent {
                   ${icons.lock('w-3.5 h-3.5 text-emerald-500')}
                   <span>https://mail.yourcompany.org</span>
                 </div>
-                <div class="flex items-center gap-1 text-slate-400 text-xs">
-                  <span class="px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-mono font-semibold">Tachyon 3.2</span>
+                <div class="flex items-center gap-1.5 text-slate-400 text-xs">
+                  <span class="text-brand-600 dark:text-cyan-400">${icons.tachyonMark('w-3.5 h-3.5')}</span>
+                  <span class="px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-mono font-semibold">Tachyon 4.0</span>
                 </div>
               </div>
 

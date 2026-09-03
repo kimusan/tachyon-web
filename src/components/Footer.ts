@@ -12,8 +12,8 @@ export class FooterComponent {
             <!-- Col 1: Brand & Bio -->
             <div class="space-y-4 md:col-span-2">
               <div class="flex items-center gap-2.5 text-slate-900 dark:text-white font-bold text-lg">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white">
-                  ${icons.zap('w-4 h-4')}
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 flex items-center justify-center text-white p-1.5">
+                  ${icons.tachyonMark('w-5 h-5 text-white')}
                 </div>
                 <span>Tachyon Webmail</span>
               </div>

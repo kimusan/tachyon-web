@@ -258,6 +258,13 @@ export const COMPARISON_DATA = [
     roundcube: 'Customizable'
   },
   {
+    feature: 'CalDAV Calendar Support',
+    tachyon: 'Built-in (Month, Week, Day, List views, CalDAV sync)',
+    snappymail: 'Not supported (Mail & Contacts only)',
+    rainloop: 'Not supported',
+    roundcube: 'Requires Kolab / third-party plugin'
+  },
+  {
     feature: 'Undo Send Feature',
     tachyon: 'Built-in (Configurable 5-30s delay)',
     snappymail: 'Not available',

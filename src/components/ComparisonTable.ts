@@ -26,7 +26,7 @@ export class ComparisonTableComponent {
                   <th class="p-4 sm:p-5 font-semibold text-slate-900 dark:text-white w-1/4">Feature / Capability</th>
                   <th class="p-4 sm:p-5 font-bold text-brand-600 dark:text-cyan-400 bg-brand-50/50 dark:bg-brand-950/40 border-x border-brand-200/60 dark:border-brand-900/60 w-1/4">
                     <div class="flex items-center gap-1.5">
-                      ${icons.zap('w-4 h-4')}
+                      ${icons.tachyonMark('w-4 h-4')}
                       <span>Tachyon</span>
                     </div>
                   </th>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Tachyon Webmail News &amp; Announcements</title>
+    <link>https://tachyonmail.app</link>
+    <description>Latest updates, releases, and security announcements from Tachyon Webmail.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 01 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://tachyonmail.app/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Real-Time Localization Tracking: Coordinating 36 Languages for Tachyon</title>
+      <link>https://tachyonmail.app/#/news/2026-09-01-translation-status-live-tracking</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-09-01-translation-status-live-tracking</guid>
+      <pubDate>Tue, 01 Sep 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>Introducing our new live translation dashboard on tachyonmail.app, tracking localization progress across 36 languages with direct GitHub contribution links.</description>
+      <category>Localization</category>
+      <category>Community</category>
+      <category>Open Source</category>
+    </item>
+
+    <item>
+      <title>Hardening Webmail: Zero Trackers, Strict CSP &amp; Sodium Cryptography</title>
+      <link>https://tachyonmail.app/#/news/2026-08-28-security-hardening-deep-dive</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-08-28-security-hardening-deep-dive</guid>
+      <pubDate>Fri, 28 Aug 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>A deep dive into Tachyon&apos;s security model: why we ditched third-party telemetry, how we enforce strict Content-Security-Policy headers, and our cryptographic design.</description>
+      <category>Security</category>
+      <category>Privacy</category>
+      <category>Architecture</category>
+    </item>
+
+    <item>
+      <title>Tachyon v4.0 Released: Modern PHP 8.4 Architecture &amp; Enhanced Security</title>
+      <link>https://tachyonmail.app/#/news/2026-08-25-tachyon-v4-released</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-08-25-tachyon-v4-released</guid>
+      <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>We are thrilled to announce Tachyon v4.0! This major release brings full PHP 8.4 compatibility, hardened security headers, and an automated release build pipeline.</description>
+      <category>Release</category>
+      <category>PHP</category>
+      <category>Security</category>
+    </item>
+
+    <item>
+      <title>Tachyon v3.2.4: vCard Categories, Group Tagging &amp; Nextcloud 34 Support</title>
+      <link>https://tachyonmail.app/#/news/2026-08-19-tachyon-v3-2-4-contacts-groups</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-08-19-tachyon-v3-2-4-contacts-groups</guid>
+      <pubDate>Wed, 19 Aug 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>Major contacts overhaul with vCard CATEGORIES support, address book group chips in compose autocomplete, and Nextcloud 34 DI modernizations.</description>
+      <category>Release</category>
+      <category>Features</category>
+      <category>Nextcloud</category>
+    </item>
+
+    <item>
+      <title>Tachyon for Nextcloud: Seamless Webmail for Your Cloud</title>
+      <link>https://tachyonmail.app/#/news/2026-07-05-nextcloud-integration</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-07-05-nextcloud-integration</guid>
+      <pubDate>Sun, 05 Jul 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>Bringing Tachyon directly into Nextcloud and ownCloud environments with automated release artifacts and drop-in SnappyMail upgrade compatibility.</description>
+      <category>Nextcloud</category>
+      <category>Integration</category>
+      <category>Release</category>
+    </item>
+
+    <item>
+      <title>Tachyon v3.1.0: Custom Branding, Directory Rebrand &amp; Debian Packages</title>
+      <link>https://tachyonmail.app/#/news/2026-07-02-tachyon-v3-1-0-released</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-07-02-tachyon-v3-1-0-released</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>The full move to Tachyon: application directories renamed to tachyon/, custom logo uploads for the login screen, new default theme, and official .deb package releases.</description>
+      <category>Release</category>
+      <category>Debian</category>
+      <category>Features</category>
+    </item>
+
+    <item>
+      <title>Introducing Tachyon: Why We Forked and Where We&apos;re Heading</title>
+      <link>https://tachyonmail.app/#/news/2026-06-15-introducing-tachyon-webmail</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-06-15-introducing-tachyon-webmail</guid>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>A fast, zero-database webmail client built for modern PHP 8.2+. The story behind the fork from SnappyMail and our vision for a lean, privacy-respecting email engine.</description>
+      <category>Announcement</category>
+      <category>Open Source</category>
+      <category>Architecture</category>
+    </item>
+  </channel>
+</rss>

@@ -9,9 +9,12 @@ import { FeaturesComponent } from './components/Features';
 import { LineageHistoryComponent } from './components/LineageHistory';
 import { InstallTabsComponent } from './components/InstallTabs';
 import { ComparisonTableComponent } from './components/ComparisonTable';
+import { LatestNewsSectionComponent } from './components/LatestNewsSection';
 import { AboutMaintainerComponent } from './components/AboutMaintainer';
 import { DocsViewerComponent } from './components/DocsViewer';
 import { CommunityViewComponent } from './components/CommunityView';
+import { NewsHubComponent } from './components/NewsHub';
+import { NewsArticleComponent } from './components/NewsArticle';
 import { ReleaseModalComponent } from './components/ReleaseModal';
 import { IssueTrackerCTAComponent } from './components/IssueTrackerCTA';
 import { FooterComponent } from './components/Footer';
@@ -25,9 +28,12 @@ class App {
   private history: LineageHistoryComponent;
   private installTabs: InstallTabsComponent;
   private comparisonTable: ComparisonTableComponent;
+  private latestNews: LatestNewsSectionComponent;
   private aboutMaintainer: AboutMaintainerComponent;
   private docsViewer: DocsViewerComponent;
   private communityView: CommunityViewComponent;
+  private newsHub: NewsHubComponent;
+  private newsArticle: NewsArticleComponent;
   private releaseModal: ReleaseModalComponent;
   private issueTrackerCTA: IssueTrackerCTAComponent;
   private footer: FooterComponent;
@@ -44,9 +50,12 @@ class App {
     this.history = new LineageHistoryComponent();
     this.installTabs = new InstallTabsComponent(this.currentStableRelease);
     this.comparisonTable = new ComparisonTableComponent();
+    this.latestNews = new LatestNewsSectionComponent();
     this.aboutMaintainer = new AboutMaintainerComponent();
     this.docsViewer = new DocsViewerComponent();
     this.communityView = new CommunityViewComponent();
+    this.newsHub = new NewsHubComponent();
+    this.newsArticle = new NewsArticleComponent();
     this.issueTrackerCTA = new IssueTrackerCTAComponent();
     this.footer = new FooterComponent();
   }
@@ -64,12 +73,18 @@ class App {
     const hash = window.location.hash;
     const isDocs = hash.startsWith('#/docs');
     const isCommunity = hash.startsWith('#/community') || hash.startsWith('#/discussions');
+    const isNewsArticle = hash.startsWith('#/news/') && hash.length > 8;
+    const isNewsHub = hash.startsWith('#/news') && !isNewsArticle;
 
     let mainContentHtml = this.renderLandingPage();
     if (isDocs) {
       mainContentHtml = this.docsViewer.render();
     } else if (isCommunity) {
       mainContentHtml = this.communityView.render();
+    } else if (isNewsArticle) {
+      mainContentHtml = this.newsArticle.render();
+    } else if (isNewsHub) {
+      mainContentHtml = this.newsHub.render();
     }
 
     appEl.innerHTML = `
@@ -83,7 +98,7 @@ class App {
       ${this.releaseModal.render()}
     `;
 
-    this.bindEvents(isDocs, isCommunity);
+    this.bindEvents(isDocs, isCommunity, isNewsHub, isNewsArticle);
   }
 
   private renderLandingPage(): string {
@@ -94,13 +109,14 @@ class App {
         ${this.history.render()}
         ${this.installTabs.render()}
         ${this.comparisonTable.render()}
+        ${this.latestNews.render()}
         ${this.aboutMaintainer.render()}
         ${this.issueTrackerCTA.render()}
       </main>
     `;
   }
 
-  private bindEvents(isDocs: boolean, isCommunity: boolean) {
+  private bindEvents(isDocs: boolean, isCommunity: boolean, isNewsHub: boolean, isNewsArticle: boolean) {
     this.navbar.bindEvents();
     this.releaseModal.bindEvents();
 
@@ -110,6 +126,11 @@ class App {
       this.docsViewer.loadPage(slug);
     } else if (isCommunity) {
       this.communityView.mount();
+    } else if (isNewsArticle) {
+      const slug = this.getNewsSlugFromHash();
+      this.newsArticle.loadArticle(slug);
+    } else if (isNewsHub) {
+      this.newsHub.loadData();
     } else {
       this.hero.bindEvents();
       this.installTabs.bindEvents();
@@ -125,11 +146,22 @@ class App {
     return 'Home';
   }
 
+  private getNewsSlugFromHash(): string {
+    const hash = window.location.hash;
+    if (hash.startsWith('#/news/')) {
+      const rawSlug = hash.substring(8);
+      return decodeURIComponent(rawSlug.split('?')[0].split('#')[0]) || '';
+    }
+    return '';
+  }
+
   private bindRouting() {
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash;
       const isDocs = hash.startsWith('#/docs');
       const isCommunity = hash.startsWith('#/community') || hash.startsWith('#/discussions');
+      const isNewsArticle = hash.startsWith('#/news/') && hash.length > 8;
+      const isNewsHub = hash.startsWith('#/news') && !isNewsArticle;
       const container = document.getElementById('main-view-container');
 
       if (!container) return;
@@ -137,6 +169,7 @@ class App {
       // Cleanup prior views
       this.docsViewer.destroy();
       this.communityView.destroy();
+      this.newsArticle.destroy();
 
       if (isDocs) {
         container.innerHTML = this.docsViewer.render();
@@ -147,6 +180,15 @@ class App {
       } else if (isCommunity) {
         container.innerHTML = this.communityView.render();
         this.communityView.mount();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (isNewsArticle) {
+        container.innerHTML = this.newsArticle.render();
+        const slug = this.getNewsSlugFromHash();
+        this.newsArticle.loadArticle(slug);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (isNewsHub) {
+        container.innerHTML = this.newsHub.render();
+        this.newsHub.loadData();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         container.innerHTML = this.renderLandingPage();

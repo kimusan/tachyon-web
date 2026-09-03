@@ -101,6 +101,10 @@ export class NavbarComponent {
               <a href="#history" class="px-3 py-2 rounded-lg hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Lineage</a>
               <a href="#install" class="px-3 py-2 rounded-lg hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Install</a>
               <a href="#comparison" class="px-3 py-2 rounded-lg hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Compare</a>
+              <a href="#/news" class="px-3 py-2 rounded-lg hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors flex items-center gap-1.5">
+                ${icons.rss('w-4 h-4')}
+                <span>News</span>
+              </a>
               <a href="#/docs" class="px-3 py-2 rounded-lg hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors flex items-center gap-1.5 text-brand-600 dark:text-brand-400 font-semibold">
                 ${icons.bookOpen('w-4 h-4')}
                 <span>Docs</span>
@@ -177,6 +181,10 @@ export class NavbarComponent {
           <a href="#history" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Lineage & History</a>
           <a href="#install" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Install Guide</a>
           <a href="#comparison" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Comparison</a>
+          <a href="#/news" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+            ${icons.rss('w-5 h-5')}
+            <span>News & Announcements</span>
+          </a>
           <a href="#/docs" class="mobile-nav-link block px-3 py-2 rounded-lg text-base font-medium text-brand-600 dark:text-brand-400 font-semibold flex items-center gap-2">
             ${icons.bookOpen('w-5 h-5')}
             <span>Documentation (Live Wiki)</span>

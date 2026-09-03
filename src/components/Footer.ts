@@ -25,18 +25,19 @@ export class FooterComponent {
               </div>
             </div>
 
-            <!-- Col 2: Documentation -->
+            <!-- Col 2: Documentation & News -->
             <div class="space-y-3">
               <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-                Documentation
+                Resources & Updates
               </h4>
               <ul class="space-y-2 text-xs">
+                <li><a href="#/news" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors font-semibold text-brand-600 dark:text-cyan-400 flex items-center gap-1.5">${icons.rss('w-3.5 h-3.5')}<span>News & Announcements</span></a></li>
+                <li><a href="/feed.xml" target="_blank" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors flex items-center gap-1.5 text-amber-600 dark:text-amber-400"><span>RSS Feed (XML)</span></a></li>
                 <li><a href="#/docs/Installation-instructions" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Installation Guide</a></li>
                 <li><a href="#/docs/Docker" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Docker Setup</a></li>
                 <li><a href="#/docs/Admin-Manual" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Admin Manual</a></li>
-                <li><a href="#/docs/Improve-performance" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Performance Tuning</a></li>
+                <li><a href="#/docs/Translations" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Translations Status</a></li>
                 <li><a href="#/docs/OpenPGP" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">OpenPGP Encryption</a></li>
-                <li><a href="#/docs/Developer-Documentation" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Plugin Development</a></li>
               </ul>
             </div>
 

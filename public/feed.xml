@@ -32,6 +32,18 @@
     </item>
 
     <item>
+      <title>Tachyon v4.0.1 – v4.0.2 Released: Critical Fixes for Contacts, UTF-8 &amp; CalDAV</title>
+      <link>https://tachyonmail.app/#/news/2026-08-26-tachyon-v4-0-1-and-v4-0-2-critical-fixes</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-08-26-tachyon-v4-0-1-and-v4-0-2-critical-fixes</guid>
+      <pubDate>Wed, 26 Aug 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>Following the v4.0 rollout, several critical issues were identified and promptly resolved in the v4.0.1 and v4.0.2 patch releases, including contact selection deletion bugs, UTF-8 send corruption, and CalDAV auth.</description>
+      <category>Release</category>
+      <category>Bugfix</category>
+      <category>Security</category>
+    </item>
+
+    <item>
       <title>Tachyon v4.0 Released: Modern PHP 8.4 Architecture &amp; Enhanced Security</title>
       <link>https://tachyonmail.app/#/news/2026-08-25-tachyon-v4-released</link>
       <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-08-25-tachyon-v4-released</guid>

@@ -4,6 +4,21 @@ export class FeaturesComponent {
   public render(): string {
     const features = [
       {
+        icon: icons.calendar('w-6 h-6 text-emerald-500'),
+        title: 'Built-in CalDAV Calendar',
+        description: 'Full-featured calendar with Month, Week, Day, and List views, drag-and-drop event management, and CalDAV synchronization.'
+      },
+      {
+        icon: icons.sun('w-6 h-6 text-amber-500'),
+        title: 'Dark / Light Mode Toggling',
+        description: 'Instant one-click theme mode toggle for supported skins, allowing seamless transitions between bright day and dark night themes.'
+      },
+      {
+        icon: icons.user('w-6 h-6 text-sky-500'),
+        title: 'vCard Categories & Groups',
+        description: 'Organize address book contacts with vCard CATEGORIES tags and automatically expand group chips directly in compose fields.'
+      },
+      {
         icon: icons.databaseOff('w-6 h-6 text-brand-500'),
         title: 'Zero Database Required',
         description: 'Connects directly to your IMAP/SMTP server. No MySQL, PostgreSQL, or SQLite database setup or migrations required.'

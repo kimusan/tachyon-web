@@ -265,6 +265,13 @@ export const COMPARISON_DATA = [
     roundcube: 'Requires Kolab / third-party plugin'
   },
   {
+    feature: 'Dark / Light Mode Toggle',
+    tachyon: 'Native UI switch (supports theme dark/light modes)',
+    snappymail: 'Not available (static per theme)',
+    rainloop: 'Not available (static per theme)',
+    roundcube: 'Elastic theme automatic / plugin'
+  },
+  {
     feature: 'Undo Send Feature',
     tachyon: 'Built-in (Configurable 5-30s delay)',
     snappymail: 'Not available',

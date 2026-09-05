@@ -5,8 +5,21 @@
     <link>https://tachyonmail.app</link>
     <description>Latest updates, releases, and security announcements from Tachyon Webmail.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 05 Sep 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://tachyonmail.app/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Let There Be Light... or Dark... or Light</title>
+      <link>https://tachyonmail.app/#/news/2026-09-05-let-there-be-light-or-dark</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-09-05-let-there-be-light-or-dark</guid>
+      <pubDate>Sat, 05 Sep 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>Why have two themes when one toggle does the trick? We cleaned up Tachyon&apos;s theme roster, merged 7 light/dark theme duplicates into unified adaptive themes, and retired 8 legacy names with seamless auto-migration.</description>
+      <category>Themes</category>
+      <category>UX</category>
+      <category>Upcoming</category>
+      <category>Release</category>
+    </item>
+
     <item>
       <title>Real-Time Localization Tracking: Coordinating 36 Languages for Tachyon</title>
       <link>https://tachyonmail.app/#/news/2026-09-01-translation-status-live-tracking</link>

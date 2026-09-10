@@ -101,23 +101,23 @@ export class TranslationsViewComponent {
           </h1>
 
           <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
-            Tachyon supports <strong>${this.report.totalLocales} languages</strong> out of the box. Anyone can help translate strings directly in your web browser via <strong>Weblate</strong>—completed translations automatically open Pull Requests to the codebase.
+            Tachyon supports <strong>${this.report.totalLocales} languages</strong> out of the box. <strong>It is now super easy to help translate Tachyon!</strong> With our Hosted Weblate setup, anyone can translate words and sentences directly in their web browser—no Git commands, code knowledge, or JSON file editing required. Completed translations are automatically synced to the repository as Pull Requests.
           </p>
         </div>
 
         <!-- Weblate Integration Banner -->
-        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-brand-500/10 border border-teal-500/30 dark:border-teal-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
-          <div class="flex items-start sm:items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 mt-0.5 sm:mt-0">
-              ${icons.languages('w-5 h-5')}
+        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-teal-500/10 via-emerald-500/10 to-brand-500/10 border-2 border-teal-500/30 dark:border-teal-500/40 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+          <div class="flex items-start sm:items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 mt-0.5 sm:mt-0 shadow-xs">
+              ${icons.languages('w-6 h-6')}
             </div>
             <div class="space-y-1">
-              <div class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
-                <span>Translate Directly in Your Browser on Weblate</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Web Translation</span>
+              <div class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
+                <span>Want to help translate? It's now easier than ever!</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-emerald-500 text-white shadow-xs">Weblate Online</span>
               </div>
-              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-                No Git commands or JSON editing needed. Translate sentences in an easy web interface, and Weblate will automatically submit a Pull Request to Tachyon.
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+                You don't need any technical skills or Git accounts. Just open your language in Weblate, suggest or translate a few words, and Weblate takes care of formatting and sending the Pull Request to Tachyon automatically.
               </p>
             </div>
           </div>
@@ -126,10 +126,10 @@ export class TranslationsViewComponent {
             href="${PROJECT_CONFIG.weblateUrl}" 
             target="_blank" 
             rel="noopener noreferrer" 
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-500 text-white shadow-sm transition-all whitespace-nowrap self-start md:self-auto"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 hover:shadow-teal-600/30 transition-all whitespace-nowrap self-start md:self-auto"
           >
-            <span>Open in Weblate</span>
-            ${icons.arrowRight('w-3.5 h-3.5')}
+            <span>Start Translating in 1-Click</span>
+            ${icons.arrowRight('w-4 h-4')}
           </a>
         </div>
 

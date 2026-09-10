@@ -24,6 +24,18 @@ export class TranslationsViewComponent {
     }
   }
 
+  private getWeblateLangUrl(code: string): string {
+    const mapping: Record<string, string> = {
+      'zh-CN': 'zh_Hans',
+      'zh-TW': 'zh_Hant',
+      'pt-BR': 'pt_BR',
+      'pt-PT': 'pt_PT',
+      'sr-Latn': 'sr_Latn'
+    };
+    const langKey = mapping[code] || code.replace('-', '_');
+    return `https://hosted.weblate.org/translate/tachyon-webmail/-/${langKey}/`;
+  }
+
   public render(): string {
     if (this.isLoading || !this.report) {
       return `
@@ -60,16 +72,28 @@ export class TranslationsViewComponent {
               </span>
             </div>
 
-            <a 
-              href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-sm transition-all"
-            >
-              ${icons.github('w-3.5 h-3.5')}
-              <span>Contribute Translations</span>
-              ${icons.externalLink('w-3 h-3')}
-            </a>
+            <div class="flex items-center gap-2.5">
+              <a 
+                href="${PROJECT_CONFIG.weblateUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-sm transition-all"
+              >
+                ${icons.languages('w-3.5 h-3.5')}
+                <span>Weblate Project</span>
+                ${icons.externalLink('w-3 h-3')}
+              </a>
+
+              <a 
+                href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all"
+              >
+                ${icons.github('w-3.5 h-3.5')}
+                <span>GitHub Files</span>
+              </a>
+            </div>
           </div>
 
           <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -77,8 +101,36 @@ export class TranslationsViewComponent {
           </h1>
 
           <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
-            Tachyon supports <strong>${this.report.totalLocales} languages</strong> out of the box. Missing strings automatically fall back to English. Below is the real-time translation coverage for every supported locale.
+            Tachyon supports <strong>${this.report.totalLocales} languages</strong> out of the box. Anyone can help translate strings directly in your web browser via <strong>Weblate</strong>—completed translations automatically open Pull Requests to the codebase.
           </p>
+        </div>
+
+        <!-- Weblate Integration Banner -->
+        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-brand-500/10 border border-teal-500/30 dark:border-teal-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+          <div class="flex items-start sm:items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0 mt-0.5 sm:mt-0">
+              ${icons.languages('w-5 h-5')}
+            </div>
+            <div class="space-y-1">
+              <div class="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
+                <span>Translate Directly in Your Browser on Weblate</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Web Translation</span>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+                No Git commands or JSON editing needed. Translate sentences in an easy web interface, and Weblate will automatically submit a Pull Request to Tachyon.
+              </p>
+            </div>
+          </div>
+
+          <a 
+            href="${PROJECT_CONFIG.weblateUrl}" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-500 text-white shadow-sm transition-all whitespace-nowrap self-start md:self-auto"
+          >
+            <span>Open in Weblate</span>
+            ${icons.arrowRight('w-3.5 h-3.5')}
+          </a>
         </div>
 
         <!-- Metric Summary Cards -->
@@ -162,7 +214,7 @@ export class TranslationsViewComponent {
                   <th class="py-3.5 px-4 min-w-[180px]">Completeness</th>
                   <th class="py-3.5 px-3 text-right">Translated</th>
                   <th class="py-3.5 px-3 text-right">Missing</th>
-                  <th class="py-3.5 px-4">Missing Categories & Action</th>
+                  <th class="py-3.5 px-4">Action</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-700 dark:text-slate-300">
@@ -175,40 +227,54 @@ export class TranslationsViewComponent {
         <!-- How to Translate Guide -->
         <div class="p-6 sm:p-8 rounded-2xl bg-gradient-to-tr from-slate-50 to-brand-50/30 dark:from-slate-900 dark:to-brand-950/20 border border-slate-200 dark:border-slate-800 space-y-4">
           <div class="flex items-center gap-2 font-bold text-base text-slate-900 dark:text-white">
-            ${icons.edit('w-5 h-5 text-brand-500')}
+            ${icons.languages('w-5 h-5 text-emerald-500')}
             <span>How to Help Translate Tachyon</span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
             <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
-              <div class="font-bold text-slate-900 dark:text-white">1. Find Your Language</div>
-              <p>Locate your language folder under <code>tachyon/v/0.0.0/app/localization/{code}/</code> (contains <code>user.json</code>, <code>admin.json</code>, and <code>static.json</code>).</p>
+              <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <span>1. Open Weblate (Easiest)</span>
+              </div>
+              <p>Click <strong>Translate</strong> next to your language in the table above to open its dedicated Weblate translation interface.</p>
             </div>
 
             <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
-              <div class="font-bold text-slate-900 dark:text-white">2. Fill Missing Strings</div>
-              <p>Missing keys default to English. Translate the values directly into your native language.</p>
+              <div class="font-bold text-slate-900 dark:text-white">2. Translate Missing Strings</div>
+              <p>Type the translations directly in your browser. Weblate provides suggestions, checks formatting, and prevents syntax mistakes.</p>
             </div>
 
             <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
-              <div class="font-bold text-slate-900 dark:text-white">3. Open a Pull Request</div>
-              <p>Submit a PR on GitHub. Your translations will be reviewed and shipped in the next release!</p>
+              <div class="font-bold text-slate-900 dark:text-white">3. Automatic Pull Request</div>
+              <p>Weblate automatically batches your contributions and submits a Pull Request to Tachyon on GitHub to be included in the next release!</p>
             </div>
           </div>
 
           <div class="pt-2 flex items-center justify-between flex-wrap gap-3">
             <span class="text-xs text-slate-500 dark:text-slate-400">
-              Need to add a completely new language? Create a new directory in <code>localization/</code> with the ISO code.
+              Prefer working directly with Git? You can also edit the JSON files under <code>tachyon/v/0.0.0/app/localization/{code}/</code>.
             </span>
-            <a 
-              href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-cyan-400 hover:underline"
-            >
-              <span>View Localization Directory on GitHub</span>
-              ${icons.externalLink('w-3.5 h-3.5')}
-            </a>
+            <div class="flex items-center gap-3">
+              <a 
+                href="${PROJECT_CONFIG.weblateUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+              >
+                <span>Weblate Project Hub</span>
+                ${icons.externalLink('w-3.5 h-3.5')}
+              </a>
+              <span class="text-slate-300 dark:text-slate-700">•</span>
+              <a 
+                href="https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:underline"
+              >
+                <span>GitHub Localization Directory</span>
+                ${icons.externalLink('w-3.5 h-3.5')}
+              </a>
+            </div>
           </div>
         </div>
 
@@ -232,7 +298,8 @@ export class TranslationsViewComponent {
         ? 'bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-cyan-300 border-brand-200 dark:border-brand-800'
         : 'bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border-amber-200 dark:border-amber-800';
 
-    const editUrl = `https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization/${l.code}`;
+    const weblateLangUrl = this.getWeblateLangUrl(l.code);
+    const githubUrl = `https://github.com/${PROJECT_CONFIG.githubRepo}/tree/master/tachyon/v/0.0.0/app/localization/${l.code}`;
 
     return `
       <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
@@ -282,23 +349,40 @@ export class TranslationsViewComponent {
           ${l.missingCount > 0 ? l.missingCount : '—'}
         </td>
 
-        <!-- Missing Categories & Action -->
+        <!-- Action Buttons -->
         <td class="py-3 px-4">
           <div class="flex items-center justify-between gap-3">
-            <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[220px]" title="${l.missingFrom || 'Fully translated'}">
+            <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[200px]" title="${l.missingFrom || 'Fully translated'}">
               ${l.missingFrom ? l.missingFrom : '<span class="text-emerald-600 dark:text-emerald-400 font-medium">All strings translated ✓</span>'}
             </div>
 
-            <a 
-              href="${editUrl}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950 dark:hover:text-cyan-300 border border-slate-200 dark:border-slate-700 transition-colors inline-flex items-center gap-1 flex-shrink-0"
-              title="Edit ${l.name} on GitHub"
-            >
-              <span>${isComplete ? 'View' : 'Translate'}</span>
-              ${icons.externalLink('w-3 h-3')}
-            </a>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <a 
+                href="${weblateLangUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${
+                  isComplete 
+                    ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700' 
+                    : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs'
+                } transition-colors inline-flex items-center gap-1"
+                title="Translate ${l.name} on Weblate"
+              >
+                ${icons.languages('w-3 h-3')}
+                <span>${isComplete ? 'Review' : 'Translate'}</span>
+                ${icons.externalLink('w-2.5 h-2.5')}
+              </a>
+
+              <a 
+                href="${githubUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                title="View ${l.code} JSON files on GitHub"
+              >
+                ${icons.github('w-3.5 h-3.5')}
+              </a>
+            </div>
           </div>
         </td>
       </tr>

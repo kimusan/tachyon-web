@@ -44,6 +44,7 @@ export const PROJECT_CONFIG = {
   githubWikiBaseUrl: 'https://raw.githubusercontent.com/wiki/kimusan/Tachyon',
   githubWikiWebUrl: 'https://github.com/kimusan/Tachyon/wiki',
   nextcloudAppUrl: 'https://apps.nextcloud.com/apps/tachyon',
+  weblateUrl: 'https://hosted.weblate.org/projects/tachyon-webmail/',
   license: 'GNU AGPLv3',
   licenseUrl: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };

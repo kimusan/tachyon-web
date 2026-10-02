@@ -191,8 +191,8 @@ export const INSTALL_SNIPPETS = {
   docker: `# Pull and run the official Tachyon Docker container
 docker run -d \\
   --name tachyon-webmail \\
-  -p 8080:80 \\
-  -v tachyon_data:/var/www/html/data \\
+  -p 8080:8888 \\
+  -v tachyon_data:/var/lib/tachyon \\
   --restart unless-stopped \\
   ghcr.io/kimusan/tachyon:latest`,
   

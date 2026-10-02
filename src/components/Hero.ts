@@ -161,7 +161,7 @@ export class HeroComponent {
               <div class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-slate-900 text-slate-200 border border-slate-800 shadow-xl font-mono text-xs sm:text-sm">
                 <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
                   <span class="text-emerald-400 select-none">$</span>
-                  <span class="text-slate-300">docker run -d -p 8080:80 ghcr.io/kimusan/tachyon:latest</span>
+                  <span class="text-slate-300">docker run -d -p 8080:8888 ghcr.io/kimusan/tachyon:latest</span>
                 </div>
                 <button 
                   id="hero-copy-cmd-btn"
@@ -391,7 +391,7 @@ export class HeroComponent {
 
     if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
-        const cmd = 'docker run -d -p 8080:80 ghcr.io/kimusan/tachyon:latest';
+        const cmd = 'docker run -d -p 8080:8888 ghcr.io/kimusan/tachyon:latest';
         try {
           await navigator.clipboard.writeText(cmd);
           if (copyIcon && copiedIcon) {

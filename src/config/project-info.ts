@@ -45,6 +45,9 @@ export const PROJECT_CONFIG = {
   githubWikiWebUrl: 'https://github.com/kimusan/Tachyon/wiki',
   nextcloudAppUrl: 'https://apps.nextcloud.com/apps/tachyon',
   weblateUrl: 'https://hosted.weblate.org/projects/tachyon-webmail/',
+  githubSecurityAdvisoriesUrl: 'https://github.com/kimusan/Tachyon/security/advisories',
+  githubSecurityReportUrl: 'https://github.com/kimusan/Tachyon/security/advisories/new',
+  githubSecurityPolicyUrl: 'https://github.com/kimusan/Tachyon/blob/master/SECURITY.md',
   license: 'GNU AGPLv3',
   licenseUrl: 'https://www.gnu.org/licenses/agpl-3.0.html',
 };
@@ -154,6 +157,12 @@ export const WIKI_PAGES: WikiPageMeta[] = [
     title: 'IMAP Capabilities & Extensions',
     category: 'Security & Protocols',
     description: 'Supported IMAP RFCs, IDLE push notifications, CONDSTORE, and QRESYNC.'
+  },
+  {
+    slug: 'Security-Advisories',
+    title: 'Security Advisories',
+    category: 'Security & Protocols',
+    description: 'Tracked GitHub Security Advisories (GHSA), CVE disclosures, affected versions, and patch notes.'
   },
   {
     slug: 'Developer-Documentation',

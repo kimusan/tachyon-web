@@ -3,6 +3,7 @@ import { GitHubWikiService, ParsedDocResult } from '../services/github-wiki';
 import { WIKI_PAGES, PROJECT_CONFIG } from '../config/project-info';
 import { GiscusWidget } from './GiscusWidget';
 import { TranslationsViewComponent } from './TranslationsView';
+import { SecurityAdvisoriesViewComponent } from './SecurityAdvisoriesView';
 
 export class DocsViewerComponent {
   private currentSlug: string = 'Home';
@@ -12,6 +13,7 @@ export class DocsViewerComponent {
   private searchQuery: string = '';
   private docGiscus: GiscusWidget | null = null;
   private translationsView: TranslationsViewComponent = new TranslationsViewComponent();
+  private securityAdvisoriesView: SecurityAdvisoriesViewComponent = new SecurityAdvisoriesViewComponent();
 
   constructor() {
     //
@@ -33,6 +35,18 @@ export class DocsViewerComponent {
       this.docData = null;
       this.updateContent();
       await this.translationsView.loadData();
+      this.bindDocEvents();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Check if loading the specialized Security Advisories dashboard
+    if (this.currentSlug.toLowerCase() === 'security-advisories') {
+      this.isLoading = false;
+      this.errorMessage = null;
+      this.docData = null;
+      this.updateContent();
+      await this.securityAdvisoriesView.loadData();
       this.bindDocEvents();
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -260,6 +274,10 @@ export class DocsViewerComponent {
       return `<p class="text-slate-400 italic text-xs py-1">Interactive Overview Table</p>`;
     }
 
+    if (this.currentSlug.toLowerCase() === 'security-advisories') {
+      return `<p class="text-slate-400 italic text-xs py-1">GHSA & CVE Disclosures</p>`;
+    }
+
     if (!this.docData || !this.docData.toc || this.docData.toc.length === 0) {
       return `<p class="text-slate-400 italic text-xs py-1">No section headers on this page</p>`;
     }
@@ -284,6 +302,10 @@ export class DocsViewerComponent {
   private renderContentBody(): string {
     if (this.currentSlug.toLowerCase() === 'translations') {
       return this.translationsView.render();
+    }
+
+    if (this.currentSlug.toLowerCase() === 'security-advisories') {
+      return this.securityAdvisoriesView.render();
     }
 
     if (this.isLoading) {
@@ -552,6 +574,11 @@ export class DocsViewerComponent {
   private bindDocEvents() {
     if (this.currentSlug.toLowerCase() === 'translations') {
       this.translationsView.bindEvents();
+      return;
+    }
+
+    if (this.currentSlug.toLowerCase() === 'security-advisories') {
+      this.securityAdvisoriesView.bindEvents();
       return;
     }
 

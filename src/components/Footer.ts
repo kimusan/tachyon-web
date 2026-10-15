@@ -38,6 +38,7 @@ export class FooterComponent {
                 <li><a href="#/docs/Admin-Manual" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Admin Manual</a></li>
                 <li><a href="#/docs/Translations" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Translations Status</a></li>
                 <li><a href="#/docs/OpenPGP" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">OpenPGP Encryption</a></li>
+                <li><a href="#/docs/Security-Advisories" class="hover:text-brand-500 dark:hover:text-cyan-400 transition-colors">Security Advisories</a></li>
               </ul>
             </div>
 

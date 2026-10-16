@@ -5,63 +5,81 @@ author: "Kim Schulz"
 authorUrl: "https://schulz.dk"
 authorAvatar: "/images/kim-schulz.webp"
 tags: ["Release", "Routing", "UX", "Bugfix"]
-summary: "What started as a simple, highly requested feature—allowing the browser Back button to close open emails—unleashed a cascade of subtle routing bugs across v4.4.3 through v4.4.6. Here is the technical story, why v4.4.6 is recommended today, and what to expect in v4.4.7."
+summary: "A simple, much requested feature, letting the browser Back button close an open email, set off a run of subtle routing bugs across v4.4.3 to v4.4.6. Here is the technical story, why v4.4.6 is the one to run today, and what v4.4.7 still has to fix."
 coverImage: ""
 featured: true
 ---
 
-Five releases in two days, and three of them today alone to clean up after one change. 
+Four releases in two days, three of them today, to clean up after one change.
 
-In [v4.4.3](https://github.com/kimusan/Tachyon/releases/tag/v4.4.3), we implemented what looked like a straightforward, highly requested quality-of-life feature ([#141](https://github.com/kimusan/Tachyon/issues/141)): **enabling the browser Back button to close an open email and return to the mailbox list**, along with giving each message its own direct URL (`#/mailbox/<folder>/m<uid>`).
+In [v4.4.3](https://github.com/kimusan/Tachyon/releases/tag/v4.4.3) we shipped what looked like a small quality-of-life feature ([#141](https://github.com/kimusan/Tachyon/issues/141)): **the browser Back button closes an open email and returns you to the mailbox list**, and every message gets its own address (`#/mailbox/<folder>/m<uid>`).
 
-The route handler had technically understood message URLs for a long time, but the UI had never actually pushed history states or written those hashes into the address bar. Doing so in a rich Single-Page Application (SPA) webmail client connected to arbitrary IMAP server configurations turned out to be far more intricate than anticipated. Every message click ended up resetting a different piece of mailbox state, kicking off a cascade of rapid releases: **v4.4.4**, **v4.4.5**, and **v4.4.6**.
+The route handler had understood message addresses for a long time. What had never happened was the other half: the interface never pushed a history entry or wrote those addresses into the address bar. Doing that in a single-page webmail client, against whatever IMAP server a user happens to run, turned out to be far more involved than it looked. Every message click reset a different piece of mailbox state, and each one surfaced as its own bug: **v4.4.4**, **v4.4.5**, **v4.4.6**.
 
-Here is a look at what went wrong under the hood, where things stand now, and our plan for **v4.4.7**.
-
----
-
-## The Domino Effect: How One Feature Triggered Three Releases
-
-### 1. Delimiters, Slashes, and Phantom Searches (Fixed in v4.4.4)
-
-In Tachyon, message links reference folders using URL-safe hashes of their full name. This is essential because IMAP folder hierarchies use delimiters (such as `.` on Dovecot or `/` on Mailcow/Courier), spaces, and non-ASCII characters.
-
-In v4.4.3, the message click handler erroneously passed the unhashed folder name into the URL. If a user opened an email in a nested folder like `Lists/dev`, the extra slash generated additional URL segments (`#/mailbox/Lists/dev/m123`). The router could not match this path, fell through, and parsed the trailing segments as pagination and search parameters. 
-
-The result? The search input was populated with garbage, and the email never opened ([#153](https://github.com/kimusan/Tachyon/issues/153)). Dovecot setups with `.` delimiters never showed the bug during initial testing, but Mailcow and Courier users ran into it immediately.
-
-### 2. Folder Hashes vs. Folder Names (Fixed in v4.4.5)
-
-To address the delimiter issue, v4.4.4 correctly applied the URL-safe folder hash to the address bar. However, this introduced a subtle inversion in the route listener: the handler took the hash from the URL and treated it as the literal folder name.
-
-When comparing the route's folder name against the message's actual full folder name, the check failed for any folder containing spaces, accents, or subfolders. The client then attempted to construct a replacement message targeting a nonexistent folder matching the hash, which failed silently. 
-
-The symptom was baffling: the email body would load for a split second, only to be immediately cleared and replaced by a blank white view ([#155](https://github.com/kimusan/Tachyon/issues/155)). Huge thanks to **@remmmi** for pinpointing this down to the exact offending line.
-
-### 3. Pagination Resets, Lost Searches & Thread State (Fixed in v4.4.6)
-
-Even with folder resolution patched, writing message state into the URL exposed several other assumptions:
-
-* **Pagination Reset**: Message links had nowhere to preserve the active page number. Opening an email from page 2 or 3 reset the route to page 1. When users tried to use the next/previous message arrow keys, the client traversed a page 1 list that didn't even contain the open message ([#157](https://github.com/kimusan/Tachyon/issues/157)).
-* **Search Context Loss**: Opening an email from search results dropped the active search query, reloading the entire unfiltered folder behind the message view ([#157](https://github.com/kimusan/Tachyon/issues/157)).
-* **Conversation & Threading Views**: The guard that prevents repeated list reloads on every click compared folder, page, and search parameters. However, in conversation mode, the thread UID travels inside the folder segment. As a result, clicking a conversation count displayed the entire mailbox list, clicking "Back to list" remained stuck inside the thread, and refreshing while viewing a threaded message reloaded the entire folder ([#156](https://github.com/kimusan/Tachyon/issues/156)).
+Here is what went wrong, where things stand, and what is left for **v4.4.7**.
 
 ---
 
-## Where We Are Now: v4.4.6 is Live
+## How one feature triggered three releases
 
-In **v4.4.6**, we consolidated all address bar parameters—folders, pages, search queries, and message UIDs—so that they are parsed and applied in one centralized location.
+### 1. Delimiters, slashes and phantom searches (fixed in v4.4.4)
 
-If you are running Tachyon **v4.4.3, v4.4.4, or v4.4.5**, **upgrading to v4.4.6 is strongly recommended**. It resolves the vast majority of routing, folder delimiter, search retention, and pagination issues.
+Message links name a folder by a URL-safe hash of its full name. That is not decoration: IMAP hierarchies use a separator, which is `.` on a default Dovecot and `/` on others, and folder names also hold spaces and non-ASCII characters.
+
+In v4.4.3 the message click handler passed the unhashed folder name into the address. Open an email in a nested folder like `Lists/dev` and the extra slash produced extra path segments (`#/mailbox/Lists/dev/m123`). No route matched that, and the leftover segments were read as the page and the search.
+
+The result: the search box filled with what looked like nonsense, and the email never opened ([#153](https://github.com/kimusan/Tachyon/issues/153)). Any folder named only in plain ASCII hashes to itself, so `INBOX` behaved perfectly and the bug was invisible here. A separator of `.` is also safe, which is why a default Dovecot setup showed nothing, while a server configured with `/`, as Mailcow is, broke on the first click.
+
+### 2. Folder hashes against folder names (fixed in v4.4.5)
+
+The fix in v4.4.4 correctly wrote the URL-safe hash. That exposed an inversion on the way back in: the route handler took the hash out of the address and used it as the folder name.
+
+Comparing that hash against the open message's real folder name never matched for any folder with a space, an accent or a parent. The client then built a replacement message pointing at a folder that does not exist, and the request for it was dropped without a word.
+
+The symptom was odd enough to be hard to report: the body loaded for an instant, then went blank ([#155](https://github.com/kimusan/Tachyon/issues/155)). Thanks to **@remmmi**, who took it to the exact line.
+
+### 3. Pagination, lost searches and thread state (fixed in v4.4.6)
+
+With folders resolving properly, writing message state into the address bar exposed three more assumptions:
+
+* **The page was reset.** A message link has nowhere to record which page you were on, so the route reported page one for all of them. Open an email from page 2 or 3 and the list came back at the top, after which the next and previous arrows walked a list that no longer held the open message and looked dead ([#157](https://github.com/kimusan/Tachyon/issues/157)).
+* **The search was dropped.** Opening an email from a result list threw the search away and reloaded the whole unfiltered folder behind it ([#157](https://github.com/kimusan/Tachyon/issues/157)).
+* **Conversations.** The test that stops the list refetching on every click compares the folder, the page and the search. In a conversation the thread id travels inside the folder segment, so it is none of those. Clicking a conversation count showed the whole mailbox, Back to list stayed inside the thread, and a refresh while reading a threaded message came back with the entire folder ([#156](https://github.com/kimusan/Tachyon/issues/156), thanks **@floppybl**).
 
 ---
 
-## The Road to v4.4.7: Auditing All Routes
+## Two bugs that looked identical
 
-Rather than continuing to play whack-a-mole with routing edge cases, **I am currently methodically working through every single possible route and navigation path in the codebase** to ensure that nothing else is broken.
+Worth recording, because it cost a day. After v4.4.6 shipped, conversations still failed on my own mailbox, on a perfectly correct address, with the fix demonstrably in the build.
 
-While v4.4.6 stabilizes standard mailbox browsing, search, and pagination, a few subtleties remain around conversation/threading views (specifically around thread navigation transitions, returning from nested thread items, and thread state persistence).
+They were two separate bugs wearing the same symptom. The one above is in the browser. The other is on the server: `MessageList` has a branch for folders larger than `message_list_limit`, 10000 by default, that answers with the most recent slice and says plainly that it does not use THREAD. A request naming one conversation fell into it and came back as the unthreaded folder, with the thread id still echoed, so the client drew a "Back to message list" button over the whole mailbox.
 
-**Tachyon v4.4.7** will be the release that ties everything together with fully verified routing across all mailbox views, conversation threads, and browser navigation actions.
+It could not escape either, because the one thing that clears that limit is a cached lookup that is itself skipped when a conversation is named. In any folder past 10000 messages, no conversation could be opened at all. No code change was needed to turn this on: a mailbox growing past the limit is enough, which is why it had worked for years and then stopped.
 
-Thank you to everyone in the community—especially **@codiflow**, **@remmmi**, **@lvarnava**, and **@floppybl**—for reporting issues, testing builds, and sharing detailed diagnostics. Your patience and feedback are what keep Tachyon moving forward!
+That fix is on master, not in v4.4.6.
+
+---
+
+## Where we are now: v4.4.6 is live
+
+v4.4.6 pulls every piece of state the address bar carries, the folder, the page, the search and the message, into one place that reads it and applies it together, instead of each one defaulting separately and overwriting what was there.
+
+If you are on **v4.4.3, v4.4.4 or v4.4.5**, move to **v4.4.6**. It settles the folder separator, blank message, search retention and pagination problems.
+
+One caveat: if any of your folders holds more than 10000 messages, opening a conversation in it is still broken in v4.4.6. That is the server-side bug above and it needs v4.4.7.
+
+---
+
+## The road to v4.4.7
+
+Rather than keep fixing these one report at a time, I went through every place in the client that writes the address bar, twelve of them, and checked each against the state the route handler applies. Eleven were already right. The twelfth was a bug nobody had reported: reloading the browser while reading a message inside a conversation came back with the whole folder behind it.
+
+**v4.4.7** will carry three fixes that are on master and already confirmed by the people who found them:
+
+* conversations in folders over `message_list_limit`, the server-side bug above
+* the whole folder sitting on screen, with no spinner, while a conversation loads, which made a slow fetch look like a failure
+* crossing a page boundary with the next and previous arrows flashing the next page's list before the message, which only shows on mobile, where the list and the message are separate views (thanks **@lvarnava**)
+
+I want to be straight about the limits of that audit. It covers the code that writes and reads the address bar, which is where all of this went wrong, and it found one real bug. It is not a proof. Nothing in the test suite can currently stand up the client's state and drive a route through it, and the server-side problem needs a mailbox of over ten thousand messages to see at all. Both of those are worth fixing, and neither is a morning's work.
+
+Thanks to **@codiflow**, **@remmmi**, **@lvarnava** and **@floppybl**, who between them reported the symptoms, tested builds, and in two cases handed me the offending line.

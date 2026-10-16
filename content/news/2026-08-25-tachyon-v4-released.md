@@ -7,7 +7,7 @@ authorAvatar: "/images/kim-schulz.webp"
 tags: ["Release", "PHP", "Security"]
 summary: "We are thrilled to announce Tachyon v4.0! This major release brings full PHP 8.4 compatibility, hardened security headers, and an automated release build pipeline."
 coverImage: ""
-featured: true
+featured: false
 ---
 
 We are excited to announce the release of **Tachyon v4.0** — the next major iteration of our privacy-first, zero-database webmail engine.

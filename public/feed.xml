@@ -5,8 +5,21 @@
     <link>https://tachyonmail.app</link>
     <description>Latest updates, releases, and security announcements from Tachyon Webmail.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 10 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 16 Oct 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://tachyonmail.app/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>The Browser Back Button Odyssey: Rapid Releases &amp; The Path to v4.4.7</title>
+      <link>https://tachyonmail.app/#/news/2026-10-16-the-browser-back-button-odyssey</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-10-16-the-browser-back-button-odyssey</guid>
+      <pubDate>Fri, 16 Oct 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>What started as a simple, highly requested feature—allowing the browser Back button to close open emails—unleashed a cascade of subtle routing bugs across v4.4.3 through v4.4.6. Here is the technical story, why v4.4.6 is recommended today, and what to expect in v4.4.7.</description>
+      <category>Release</category>
+      <category>Routing</category>
+      <category>UX</category>
+      <category>Bugfix</category>
+    </item>
+
     <item>
       <title>Translating Tachyon is Now Super Easy via Hosted Weblate</title>
       <link>https://tachyonmail.app/#/news/2026-09-10-translate-tachyon-on-weblate</link>

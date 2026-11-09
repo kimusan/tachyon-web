@@ -213,142 +213,28 @@ export class HeroComponent {
                 </div>
                 <div class="flex items-center gap-1.5 text-slate-400 text-xs">
                   <span class="text-brand-600 dark:text-cyan-400">${icons.tachyonMark('w-3.5 h-3.5')}</span>
-                  <span class="px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-mono font-semibold">Tachyon 4.0</span>
+                  <span class="px-2 py-0.5 rounded bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-mono font-semibold">Tachyon Webmail</span>
                 </div>
               </div>
 
-              <!-- Mock Webmail Interface Body -->
-              <div class="grid grid-cols-1 md:grid-cols-12 min-h-[380px] bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200">
-                
-                <!-- Mock Sidebar (3 cols) -->
-                <div class="hidden md:block md:col-span-3 border-r border-slate-200 dark:border-slate-800 p-4 space-y-4 bg-slate-50/50 dark:bg-slate-950/30">
-                  
-                  <!-- Account Switcher with multi-account badges -->
-                  <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                    <div class="flex items-center gap-2.5 overflow-hidden">
-                      <div class="w-8 h-8 rounded-lg bg-brand-600 text-white font-bold flex items-center justify-center text-xs">
-                        JS
-                      </div>
-                      <div class="text-xs truncate">
-                        <div class="font-semibold text-slate-900 dark:text-white">admin@domain.tld</div>
-                        <div class="text-slate-400 text-[11px]">Primary Mailbox</div>
-                      </div>
-                    </div>
-                    <span class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-brand-500 text-white">4</span>
-                  </div>
-
-                  <!-- Folders -->
-                  <div class="space-y-1 text-xs font-medium">
-                    <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 font-semibold">
-                      <div class="flex items-center gap-2">
-                        ${icons.mail('w-4 h-4')}
-                        <span>Inbox</span>
-                      </div>
-                      <span class="px-1.5 py-0.2 rounded-full bg-brand-600 text-white text-[10px]">3</span>
-                    </div>
-
-                    <div class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/40">
-                      <div class="flex items-center gap-2">
-                        ${icons.edit('w-4 h-4')}
-                        <span>Drafts</span>
-                      </div>
-                      <span class="text-slate-400 text-[11px]">1</span>
-                    </div>
-
-                    <div class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/40">
-                      <div class="flex items-center gap-2">
-                        ${icons.arrowRight('w-4 h-4')}
-                        <span>Sent</span>
-                      </div>
-                    </div>
-
-                    <div class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/40">
-                      <div class="flex items-center gap-2">
-                        ${icons.filter('w-4 h-4')}
-                        <span>Sieve Rules</span>
-                      </div>
-                    </div>
-
-                    <div class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/40">
-                      <div class="flex items-center gap-2">
-                        ${icons.shield('w-4 h-4')}
-                        <span>OpenPGP Keys</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Mock Message List (4 cols) -->
-                <div class="hidden sm:block md:col-span-4 border-r border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800">
-                  <div class="p-3 bg-slate-50 dark:bg-slate-950/20 text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center justify-between">
-                    <span>Recent Messages</span>
-                    <span>3 Unread</span>
-                  </div>
-
-                  <div class="p-3.5 bg-brand-50/50 dark:bg-brand-950/20 border-l-4 border-brand-500 space-y-1">
-                    <div class="flex items-center justify-between text-xs">
-                      <span class="font-bold text-slate-900 dark:text-white">Security Operations</span>
-                      <span class="text-slate-400 text-[11px]">Just now</span>
-                    </div>
-                    <div class="text-xs font-medium text-slate-800 dark:text-slate-200 truncate">Tachyon Hardening & SRI Check Passed</div>
-                    <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Content Security Policy report-to endpoint is active...</div>
-                  </div>
-
-                  <div class="p-3.5 space-y-1 hover:bg-slate-50 dark:hover:bg-slate-800/20">
-                    <div class="flex items-center justify-between text-xs">
-                      <span class="font-semibold text-slate-800 dark:text-slate-200">DevOps Alert</span>
-                      <span class="text-slate-400 text-[11px]">10:42 AM</span>
-                    </div>
-                    <div class="text-xs text-slate-700 dark:text-slate-300 truncate">PHP 8.3 OPcache stats at 99.4% hitrate</div>
-                    <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Memory usage 4.2 MB per request. Zero SQL latency...</div>
-                  </div>
-
-                  <div class="p-3.5 space-y-1 hover:bg-slate-50 dark:hover:bg-slate-800/20">
-                    <div class="flex items-center justify-between text-xs">
-                      <span class="font-semibold text-slate-800 dark:text-slate-200">Nextcloud Hub</span>
-                      <span class="text-slate-400 text-[11px]">Yesterday</span>
-                    </div>
-                    <div class="text-xs text-slate-700 dark:text-slate-300 truncate">Tachyon App v3.2.8 successfully synchronized</div>
-                  </div>
-                </div>
-
-                <!-- Mock Reading Pane & Undo Toast (5 cols) -->
-                <div class="md:col-span-5 p-5 flex flex-col justify-between space-y-4">
-                  <div class="space-y-4">
-                    <div class="flex items-start justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                      <div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-base">Tachyon Hardening & SRI Check Passed</h3>
-                        <div class="text-xs text-slate-500 mt-0.5">From: <span class="font-mono text-slate-700 dark:text-slate-300">secops@tachyonmail.app</span></div>
-                      </div>
-                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                        ${icons.lock('w-3 h-3')}
-                        <span>PGP Signed</span>
-                      </span>
-                    </div>
-
-                    <div class="text-xs text-slate-600 dark:text-slate-300 space-y-2 leading-relaxed">
-                      <p>All automated security validations have passed:</p>
-                      <ul class="space-y-1 font-mono text-[11px] text-slate-500 dark:text-slate-400 pl-2 border-l-2 border-slate-200 dark:border-slate-800">
-                        <li>✓ Subresource Integrity (SRI) verified</li>
-                        <li>✓ Permissions-Policy: camera=(), mic=()</li>
-                        <li>✓ Pure IMAP connection via TLS 1.3</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <!-- Headline Feature Highlight: Undo Send Bar -->
-                  <div class="p-3 rounded-xl bg-slate-900 text-white flex items-center justify-between shadow-lg border border-slate-800 text-xs">
-                    <div class="flex items-center gap-2.5">
-                      <span class="text-cyan-400">${icons.undo('w-4 h-4')}</span>
-                      <span>Message queued. Sending in <strong class="text-cyan-300 font-mono">5s</strong></span>
-                    </div>
-                    <button class="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white font-semibold text-[11px] transition-colors">
-                      Undo Send
-                    </button>
-                  </div>
-
-                </div>
-
+              <!-- Webmail Interface Screenshot (Dark / Light Mode) -->
+              <div class="relative bg-slate-100 dark:bg-slate-950">
+                <img 
+                  src="/images/tachyon-modern-dark.png" 
+                  alt="Tachyon Webmail Interface - Dark Mode" 
+                  class="hidden dark:block w-full h-auto select-none"
+                  width="2560"
+                  height="1600"
+                  fetchpriority="high"
+                />
+                <img 
+                  src="/images/tachyon-modern-light.png" 
+                  alt="Tachyon Webmail Interface - Light Mode" 
+                  class="block dark:hidden w-full h-auto select-none"
+                  width="2560"
+                  height="1600"
+                  fetchpriority="high"
+                />
               </div>
 
             </div>

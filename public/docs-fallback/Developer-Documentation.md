@@ -24,7 +24,7 @@ The source code of installed extensions is placed on your webserver inside the T
 
 ## How Tachyon initializes the plugins
 
-The following shall describe how Tachyon initializes the activated extensions. All files can be found in the Tachyon repository under [tachyon/v/3.0.12/](https://github.com/kimusan/Tachyon/tree/master/tachyon/v/3.0.12) and the following paths are relative to that folder.
+The following shall describe how Tachyon initializes the activated extensions. All files can be found in the Tachyon repository under [tachyon/v/0.0.0/](https://github.com/kimusan/Tachyon/tree/master/tachyon/v/0.0.0) and the following paths are relative to that folder.
 
 1. `include.php` calls `Tachyon\Service::Handle()` inside of `app/libraries/Tachyon/Service.php`
 2. `Service.php` calls `Api::Actions()` inside of `app/libraries/Tachyon/Api.php`.
@@ -37,7 +37,7 @@ Because the `Init()` function of every plugin is called by `Manager.php` inside 
 Hooks and therefore your registered functions of the plugin are called on multiple points inside the source of Tachyon by launching the function `RunHook` of `app/libraries/Tachyon/Plugins/Manager.php`.
 
 ## Getting started with your plugin
-Plugins always extend the [AbstractPlugin class](https://github.com/kimusan/Tachyon/blob/master/tachyon/v/3.0.12/app/libraries/Tachyon/Plugins/AbstractPlugin.php).
+Plugins always extend the [AbstractPlugin class](https://github.com/kimusan/Tachyon/blob/master/tachyon/v/0.0.0/app/libraries/Tachyon/Plugins/AbstractPlugin.php).
 To get an idea what is possible see the [example plugin](https://github.com/kimusan/Tachyon/blob/master/plugins/example/index.php) and the other plugins in the plugin repository. \
 Your plugin class inside the `index.php` of your plugin first should declare some information about it. This info will be shown inside the Admin Panel -> Extensions Menu and lets the user know what the plugin is intended for or if a new version of your plugin is available.
 ```
@@ -53,7 +53,7 @@ Your plugin class inside the `index.php` of your plugin first should declare som
 		DESCRIPTION = 'Show graphic of sender in message and messages list (supports BIMI, Gravatar and identicon, Contacts is still TODO)';
 ```
 In many cases your plugin will also need some configuration. For example the administrator could insert credentials for a database connection that your plugin needs to work properly. All these text fields, dropdown etc. are defined inside your plugin class inside `protected function configMapping(): array`. See for example [this plugin](https://github.com/kimusan/Tachyon/blob/d1263802826013f8da0d17c8bc763c0a4aa1e1b8/plugins/ldap-mail-accounts/index.php#L56) to get an idea what you need to define inside `configMapping()`. Tachyon will take this definitions and create a configuration dialog that is reachable inside the Extensions menu of the Admin Panel (little cogwheel beside the name of your plugin). \
-The list of available `PluginPropertyType` (text fields, dropdown boxes...) can be found [here](https://github.com/kimusan/Tachyon/blob/master/tachyon/v/3.0.12/app/libraries/Tachyon/Enumerations/PluginPropertyType.php).
+The list of available `PluginPropertyType` (text fields, dropdown boxes...) can be found [here](https://github.com/kimusan/Tachyon/blob/master/tachyon/v/0.0.0/app/libraries/Tachyon/Enumerations/PluginPropertyType.php).
 
 ## Hooks
 
@@ -66,7 +66,7 @@ To register the function `myCallbackFunction` inside of your index.php of your e
 $this->addHook('login.success', 'myCallbackFunction');
 ```
 
-If in Tachyon the hook `login.success` is executed, Tachyon will pass an array with parameters to the function `RunHook` defined in `tachyon/v/3.0.12/app/libraries/Tachyon/Plugins/Manager.php`. The length and content of the array with parameters depends on the specific hook. The function `RunHook` takes the array and passes the content as single parameters to your function `myCallbackFunction`; it will not hand over the array.
+If in Tachyon the hook `login.success` is executed, Tachyon will pass an array with parameters to the function `RunHook` defined in `tachyon/v/0.0.0/app/libraries/Tachyon/Plugins/Manager.php`. The length and content of the array with parameters depends on the specific hook. The function `RunHook` takes the array and passes the content as single parameters to your function `myCallbackFunction`; it will not hand over the array.
 
 Therefore the example function `myCallbackFunction` should be defined to handle one parameter `Account $oAccount` because `login.success` passes you over the object of the account that was logged on.
 
@@ -97,9 +97,9 @@ Parameters passed to the plugins:
 ```
 
 ## JavaScript inside your plugin
-Your plugin can use the function `addJs` ([definition](https://github.com/kimusan/Tachyon/blob/d1263802826013f8da0d17c8bc763c0a4aa1e1b8/tachyon/v/3.0.12/app/libraries/Tachyon/Plugins/AbstractPlugin.php#L193)) to inject JavaScript to Tachyon. Inside this JavaScript code you could for example react on [JavaScript Events](https://github.com/kimusan/Tachyon/tree/master/plugins#javascript-events).
+Your plugin can use the function `addJs` ([definition](https://github.com/kimusan/Tachyon/blob/master/tachyon/v/0.0.0/app/libraries/Tachyon/Plugins/AbstractPlugin.php#L193)) to inject JavaScript to Tachyon. Inside this JavaScript code you could for example react on [JavaScript Events](https://github.com/kimusan/Tachyon/tree/master/plugins#javascript-events).
 
 ### Modify the UI of Tachyon at runtime
-Tachyon uses [templates](https://github.com/kimusan/Tachyon/tree/master/tachyon/v/3.0.12/app/templates) to define how for example the `SystemDropDown` menu (see image below) has to look like. \
+Tachyon uses [templates](https://github.com/kimusan/Tachyon/tree/master/tachyon/v/0.0.0/app/templates) to define how for example the `SystemDropDown` menu (see image below) has to look like. \
 ![grafik](https://user-images.githubusercontent.com/116441962/208305562-c24c2c3f-5d4e-44b3-9676-6799dfcff801.png) \
 If your plugin needs to modify something inside this templates (for example add an additional button to the UI or modify the list of available functions inside the `SystemDropDown`) you can add JavaScript code to your plugin that modifies this template in the right moment. Detailed information on this topic can be found here: https://github.com/kimusan/Tachyon/issues/733#issuecomment-1333725216.

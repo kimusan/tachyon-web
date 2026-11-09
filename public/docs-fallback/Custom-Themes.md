@@ -2,12 +2,12 @@ Tachyon does support custom CSS themes.
 
 The place where the theme should be is `[root]/themes` where `[root]` is the root of your Tachyon installation (see below for Nextcloud).
 
-So if you have something like `/home/webmail/public_html/tachyon/v/3.0.12/`
+So if you have something like `/home/webmail/public_html/tachyon/v/0.0.0/`
 The custom themes should be in `/home/webmail/public_html/themes/`.
 
 In there create a theme folder with file `styles.css`.<br>
 Like: `[root]/themes/[themename]/styles.css`.<br>
-You can copy the content of https://github.com/kimusan/Tachyon/blob/master/tachyon/v/3.0.12/themes/example.css as a start for your custom theme. Or copy from https://github.com/kimusan/Tachyon/blob/master/tachyon/v/3.0.12/themes/Default/styles.css
+You can copy the content of https://github.com/kimusan/Tachyon/blob/master/tachyon/v/0.0.0/themes/example.css as a start for your custom theme. Or copy from https://github.com/kimusan/Tachyon/blob/master/tachyon/v/0.0.0/themes/Default/styles.css
 
 You can also use images like:
 ```css

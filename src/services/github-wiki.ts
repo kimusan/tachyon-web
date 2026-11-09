@@ -54,16 +54,17 @@ export class GitHubWikiService {
       const response = await fetch(liveUrl);
       if (response.ok) {
         const text = await response.text();
+        const normalized = this.normalizeLegacyUrls(text);
         // Save to cache
         try {
           localStorage.setItem(cacheKey, JSON.stringify({
             timestamp: Date.now(),
-            content: text
+            content: normalized
           }));
         } catch {
           // Ignore
         }
-        return text;
+        return normalized;
       }
     } catch (e) {
       console.warn(`Failed to fetch live wiki for ${slug}, trying local fallback`, e);
@@ -74,7 +75,8 @@ export class GitHubWikiService {
       const fallbackUrl = `/docs-fallback/${slug}.md`;
       const response = await fetch(fallbackUrl);
       if (response.ok) {
-        return await response.text();
+        const text = await response.text();
+        return this.normalizeLegacyUrls(text);
       }
     } catch (e) {
       console.warn(`Failed to fetch local fallback for ${slug}`, e);
@@ -83,8 +85,19 @@ export class GitHubWikiService {
     throw new Error(`Documentation page "${slug}" could not be loaded.`);
   }
 
+  private static normalizeLegacyUrls(content: string): string {
+    return content
+      // Normalize legacy versioned GitHub URLs pointing to non-existent /tachyon/v/3.x.x/ or older versions on master
+      .replace(/(github\.com\/kimusan\/Tachyon\/(?:blob|tree)\/master\/tachyon\/v\/)(?:3\.[0-9.]+|[\d.]+)([\/?#\s)\]"]|$)/g, '$10.0.0$2')
+      // Normalize local filesystem path examples
+      .replace(/\/tachyon\/v\/3\.0\.12\//g, '/tachyon/v/0.0.0/')
+      // Normalize any legacy snappymail repository references in links
+      .replace(/github\.com\/the-djmaze\/snappymail/g, 'github.com/kimusan/Tachyon');
+  }
+
   public static async getPage(slug: string): Promise<ParsedDocResult> {
     const rawMarkdown = await this.fetchPageMarkdown(slug);
+    const normalizedMarkdown = this.normalizeLegacyUrls(rawMarkdown);
     const meta = WIKI_PAGES.find(p => p.slug.toLowerCase() === slug.toLowerCase()) || {
       slug,
       title: slug.replace(/-/g, ' '),
@@ -134,7 +147,7 @@ export class GitHubWikiService {
       return `<a href="${targetHref}"${titleAttr}${externalAttrs}>${text}</a>`;
     };
 
-    const parsedHtml = await marked.parse(rawMarkdown, { renderer });
+    const parsedHtml = await marked.parse(normalizedMarkdown, { renderer });
     const sanitizedHtml = DOMPurify.sanitize(parsedHtml, {
       ADD_ATTR: ['target', 'rel', 'id']
     });

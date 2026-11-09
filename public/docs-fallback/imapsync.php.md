@@ -5,7 +5,7 @@ But there are differences to cope with special IMAP extensions (like handling th
 
 Example:
 ```
-/path/to/tachyon/v/3.0.12/imapsync.php \
+/path/to/tachyon/v/0.0.0/imapsync.php \
   --host1 test1.tachyon.eu \
   --user1 test1               \
   --password1 "secret1"       \

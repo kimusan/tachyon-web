@@ -4,7 +4,7 @@
 $_ENV['TACHYON_INCLUDE_AS_API'] = true;
 require_once '/path/to/tachyon_root/index.php';
 // or with specific version
-//require_once '/path/to/tachyon_root/tachyon/v/3.0.12/include.php';
+//require_once '/path/to/tachyon_root/tachyon/v/0.0.0/include.php';
 
 // returns instance of \Tachyon\Actions
 \Tachyon\Api::Actions();

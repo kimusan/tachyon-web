@@ -7,7 +7,7 @@ authorAvatar: "/images/kim-schulz.webp"
 tags: ["Release", "Routing", "UX", "Bugfix"]
 summary: "A simple, much requested feature, letting the browser Back button close an open email, set off a run of subtle routing bugs across v4.4.3 to v4.4.6. Here is the technical story, why v4.4.6 is the one to run today, and what v4.4.7 still has to fix."
 coverImage: ""
-featured: true
+featured: false
 ---
 
 Four releases in two days, three of them today, to clean up after one change.

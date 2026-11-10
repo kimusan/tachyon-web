@@ -5,8 +5,20 @@
     <link>https://tachyonmail.app</link>
     <description>Latest updates, releases, and security announcements from Tachyon Webmail.</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 16 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 10 Nov 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://tachyonmail.app/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Leaving the Dusty SnappyMail Look Behind: The Modern Theme &amp; Custom Accent Colors</title>
+      <link>https://tachyonmail.app/#/news/2026-11-10-modern-theme-and-accent-palettes</link>
+      <guid isPermaLink="true">https://tachyonmail.app/#/news/2026-11-10-modern-theme-and-accent-palettes</guid>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Kim Schulz</dc:creator>
+      <description>Coming in the next release: a new Modern theme, configurable accent color palettes for themes, and a cleaned-up Tachyon theme redesign. Check out the frontpage of tachyonmail.app for a live dark and light teaser.</description>
+      <category>Themes</category>
+      <category>UX</category>
+      <category>Upcoming</category>
+    </item>
+
     <item>
       <title>The Browser Back Button Odyssey: Rapid Releases &amp; The Path to v4.4.7</title>
       <link>https://tachyonmail.app/#/news/2026-10-16-the-browser-back-button-odyssey</link>
